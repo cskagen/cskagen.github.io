@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>tegning_nr852</title>
+
+<style>
+@media (max-width: 600px){
+  .wrapper{
+    padding:10px;
+  }
+
+  h1{
+    font-size:16px;
+    margin-bottom:6px;
+  }
+
+  .prompt-wrap{
+    margin-top:8px;
+    font-size:12px;
+  }
+}
+
+body{
+  margin:0;
+  padding:0;
+  background:#ffffff;
+  font-family:Baskerville, "Baskerville Old Face", Georgia, serif;
+}
+
+.wrapper{
+  height:100svh;
+  box-sizing:border-box;
+  padding:16px;
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+}
+
+h1{
+  font-size:18px;
+  font-weight:400;
+  text-align:left;
+  margin:0 0 10px 0;
+}
+
+.image-area{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:0;
+  touch-action:pan-y;
+}
+
+.image-area a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  text-decoration:none;
+}
+
+img{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  display:block;
+}
+
+.prompt-wrap{
+  margin-top:10px;
+  text-align:left;
+  font-size:14px;
+  line-height:1.4;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.prompt{
+  flex:0 0 auto;
+}
+
+#command{
+  flex:1 1 auto;
+  border:none;
+  outline:none;
+  background:transparent;
+  font:inherit;
+  color:inherit;
+  padding:0;
+  margin:0;
+}
+
+#command::placeholder{
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<h1>tegning_nr852</h1>
+
+<div class="image-area" id="swipe-area">
+  <a href="tegning_nr853.html" aria-label="Neste tegning">
+    <img src="../images/tegning_nr852.jpg" alt="tegning nr 852">
+  </a>
+</div>
+
+<div class="prompt-wrap">
+  <span class="prompt">&gt;</span>
+  <input id="command" type="text" autocomplete="off" spellcheck="false" placeholder="">
+</div>
+
+</div>
+
+<script>
+const NEXT_PAGE = "tegning_nr853.html";
+const PREV_PAGE = "tegning_nr851.html";
+const LATEST_PAGE = "tegning_latest.html";
+const FIRST_PAGE = "tegning_nr783.html";
+
+function goToCommand(value) {
+  const v = value.trim().toLowerCase();
+
+  if (!v) return;
+
+  if (/^\d+$/.test(v)) {
+    window.location.href = "tegning_nr" + v + ".html";
+    return;
+  }
+
+  const commands = {
+    "latest": LATEST_PAGE,
+    "first": FIRST_PAGE,
+    "list": "list.html",
+    "bio": "bio.html",
+    "help": "help.html"
+  };
+
+  if (commands[v]) {
+    window.location.href = commands[v];
+  }
+}
+
+document.getElementById("command").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    goToCommand(this.value);
+  }
+});
+
+document.addEventListener("keydown", function(event) {
+  const activeTag = document.activeElement.tagName.toLowerCase();
+  const typing = activeTag === "input" || activeTag === "textarea";
+
+  if (typing) return;
+
+  if (["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(event.key)) {
+    event.preventDefault();
+  }
+
+  if (event.key === "ArrowRight") {
+    window.location.href = NEXT_PAGE;
+  }
+
+  if (event.key === "ArrowLeft") {
+    window.location.href = PREV_PAGE;
+  }
+
+  if (event.key === "ArrowUp") {
+    window.location.href = LATEST_PAGE;
+  }
+
+  if (event.key === "ArrowDown") {
+    window.location.href = FIRST_PAGE;
+  }
+});
+
+const swipeArea = document.getElementById("swipe-area");
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+swipeArea.addEventListener("touchstart", function(event) {
+  const touch = event.changedTouches[0];
+  touchStartX = touch.screenX;
+  touchStartY = touch.screenY;
+}, {passive:true});
+
+swipeArea.addEventListener("touchend", function(event) {
+  const touch = event.changedTouches[0];
+  touchEndX = touch.screenX;
+  touchEndY = touch.screenY;
+
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+    if (dx < 0) {
+      window.location.href = NEXT_PAGE;
+    } else {
+      window.location.href = PREV_PAGE;
+    }
+  }
+}, {passive:true});
+</script>
+
+</body>
+</html>
