@@ -9,11 +9,11 @@ function goToCommand(value, latestPage, firstPage) {
   }
 
   const commands = {
-    "latest": latestPage,
-    "first": firstPage,
-    "list": "list.html",
-    "bio": "bio.html",
-    "help": "help.html"
+    latest: latestPage,
+    first: firstPage,
+    list: "list.html",
+    bio: "bio.html",
+    help: "help.html"
   };
 
   if (commands[v]) {
@@ -33,44 +33,45 @@ function setupViewer(config) {
   const swipeArea = document.getElementById("swipe-area");
 
   if (commandInput) {
-    commandInput.addEventListener("keydown", function(event) {
+    commandInput.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         goToCommand(this.value, latestPage, firstPage);
       }
     });
   }
 
-  document.addEventListener("keydown", function(event) {
+  document.addEventListener("keydown", function (event) {
+    const activeElement = document.activeElement;
+    const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
+    const typing = activeTag === "input" || activeTag === "textarea";
 
-  const activeTag = document.activeElement.tagName.toLowerCase();
-  const typing = activeTag === "input" || activeTag === "textarea";
+    if (typing) return;
 
-  if (typing) return;
-
-  if (event.key === "ArrowRight") {
-    window.location.href = NEXT_PAGE;
-  }
-
-  if (event.key === "ArrowLeft") {
-    window.location.href = PREV_PAGE;
-  }
-
-  if (event.key === "ArrowUp") {
-    window.location.href = LATEST_PAGE;
-  }
-
-  if (event.key === "ArrowDown") {
-    window.location.href = FIRST_PAGE;
-  }
-
-  if (event.key === "f") {
-    const img = document.querySelector(".image-area img");
-    if (img) {
-      window.open(img.src, "_blank");
+    if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key)) {
+      event.preventDefault();
     }
-  }
 
-});
+    if (event.key === "ArrowRight" && nextPage) {
+      window.location.href = nextPage;
+    }
+
+    if (event.key === "ArrowLeft" && prevPage) {
+      window.location.href = prevPage;
+    }
+
+    if (event.key === "ArrowUp") {
+      window.location.href = latestPage;
+    }
+
+    if (event.key === "ArrowDown") {
+      window.location.href = firstPage;
+    }
+
+    if (event.key === "f") {
+      const img = document.querySelector(".image-area img");
+      if (img) {
+        window.open(img.src, "_blank");
+      }
     }
   });
 
@@ -80,29 +81,37 @@ function setupViewer(config) {
     let touchEndX = 0;
     let touchEndY = 0;
 
-    swipeArea.addEventListener("touchstart", function(event) {
-      const touch = event.changedTouches[0];
-      touchStartX = touch.screenX;
-      touchStartY = touch.screenY;
-    }, {passive:true});
+    swipeArea.addEventListener(
+      "touchstart",
+      function (event) {
+        const touch = event.changedTouches[0];
+        touchStartX = touch.screenX;
+        touchStartY = touch.screenY;
+      },
+      { passive: true }
+    );
 
-    swipeArea.addEventListener("touchend", function(event) {
-      const touch = event.changedTouches[0];
-      touchEndX = touch.screenX;
-      touchEndY = touch.screenY;
+    swipeArea.addEventListener(
+      "touchend",
+      function (event) {
+        const touch = event.changedTouches[0];
+        touchEndX = touch.screenX;
+        touchEndY = touch.screenY;
 
-      const dx = touchEndX - touchStartX;
-      const dy = touchEndY - touchStartY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
 
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0 && nextPage) {
-          window.location.href = nextPage;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0 && nextPage) {
+            window.location.href = nextPage;
+          }
+
+          if (dx > 0 && prevPage) {
+            window.location.href = prevPage;
+          }
         }
-
-        if (dx > 0 && prevPage) {
-          window.location.href = prevPage;
-        }
-      }
-    }, {passive:true});
+      },
+      { passive: true }
+    );
   }
 }
