@@ -1,22 +1,20 @@
+/* ---------- Mobile adjustments ---------- */
+
 @media (max-width: 600px){
+
   .wrapper{
     padding:10px;
   }
-
-h1 a{
-  color: inherit;
-  text-decoration: none;
-}
-
-h1 a:hover{
-  text-decoration: underline;
-}
 
   .prompt-wrap{
     margin-top:8px;
     font-size:12px;
   }
+
 }
+
+
+/* ---------- Base layout ---------- */
 
 body{
   margin:0;
@@ -35,12 +33,27 @@ body{
   flex-direction:column;
 }
 
+
+/* ---------- Title ---------- */
+
 h1{
   font-size:18px;
   font-weight:400;
   text-align:left;
   margin:0 0 10px 0;
 }
+
+h1 a{
+  color:inherit;
+  text-decoration:none;
+}
+
+h1 a:hover{
+  text-decoration:underline;
+}
+
+
+/* ---------- Image viewer ---------- */
 
 .image-area{
   flex:1;
@@ -67,6 +80,9 @@ img{
   height:auto;
   display:block;
 }
+
+
+/* ---------- Command console ---------- */
 
 .prompt-wrap{
   margin-top:10px;
