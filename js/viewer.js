@@ -41,30 +41,36 @@ function setupViewer(config) {
   }
 
   document.addEventListener("keydown", function(event) {
-    const active = document.activeElement;
-    const activeTag = active ? active.tagName.toLowerCase() : "";
-    const typing = activeTag === "input" || activeTag === "textarea";
 
-    if (typing) return;
+  const activeTag = document.activeElement.tagName.toLowerCase();
+  const typing = activeTag === "input" || activeTag === "textarea";
 
-    if (["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(event.key)) {
-      event.preventDefault();
+  if (typing) return;
+
+  if (event.key === "ArrowRight") {
+    window.location.href = NEXT_PAGE;
+  }
+
+  if (event.key === "ArrowLeft") {
+    window.location.href = PREV_PAGE;
+  }
+
+  if (event.key === "ArrowUp") {
+    window.location.href = LATEST_PAGE;
+  }
+
+  if (event.key === "ArrowDown") {
+    window.location.href = FIRST_PAGE;
+  }
+
+  if (event.key === "f") {
+    const img = document.querySelector(".image-area img");
+    if (img) {
+      window.open(img.src, "_blank");
     }
+  }
 
-    if (event.key === "ArrowRight" && nextPage) {
-      window.location.href = nextPage;
-    }
-
-    if (event.key === "ArrowLeft" && prevPage) {
-      window.location.href = prevPage;
-    }
-
-    if (event.key === "ArrowUp") {
-      window.location.href = latestPage;
-    }
-
-    if (event.key === "ArrowDown") {
-      window.location.href = firstPage;
+});
     }
   });
 
