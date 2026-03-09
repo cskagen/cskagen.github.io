@@ -1,0 +1,101 @@
+@media (max-width: 600px){
+  .wrapper{
+    padding:10px;
+  }
+
+  h1{
+    font-size:16px;
+    margin-bottom:6px;
+  }
+
+  .prompt-wrap{
+    margin-top:8px;
+    font-size:12px;
+  }
+}
+
+body{
+  margin:0;
+  padding:0;
+  background:#ffffff;
+  font-family:Baskerville, "Baskerville Old Face", Georgia, serif;
+}
+
+.wrapper{
+  height:100svh;
+  box-sizing:border-box;
+  padding:16px;
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+}
+
+h1{
+  font-size:18px;
+  font-weight:400;
+  text-align:left;
+  margin:0 0 10px 0;
+}
+
+.image-area{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:0;
+  touch-action:pan-y;
+}
+
+.image-area a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  text-decoration:none;
+}
+
+img{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  display:block;
+}
+
+.prompt-wrap{
+  margin-top:10px;
+  text-align:left;
+  font-size:14px;
+  line-height:1.4;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-family:
+    "DIN 1451",
+    "DIN Alternate",
+    "DIN Condensed",
+    "Arial Narrow",
+    sans-serif;
+}
+
+.prompt{
+  flex:0 0 auto;
+}
+
+#command{
+  flex:1 1 auto;
+  border:none;
+  outline:none;
+  background:transparent;
+  font:inherit;
+  color:inherit;
+  padding:0;
+  margin:0;
+  letter-spacing:0.04em;
+}
+
+#command::placeholder{
+  color:#777;
+}
