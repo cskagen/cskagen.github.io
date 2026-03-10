@@ -7,7 +7,7 @@ from pathlib import Path
 # --------------------------------------------------
 
 IMAGE_DIR = Path("images")
-OUTPUT_DIR = Path("drawings_auto")   # FIRST TEST HERE
+OUTPUT_DIR = Path("drawings")   # FIRST TEST HERE
 STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
 
