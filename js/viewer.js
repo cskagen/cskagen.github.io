@@ -9,12 +9,13 @@ function goToCommand(value, latestPage, firstPage) {
   }
 
   const commands = {
-    latest: latestPage,
-    first: firstPage,
-    list: "list.html",
-    bio: "bio.html",
-    help: "help.html"
-  };
+  latest: latestPage,
+  first: firstPage,
+  list: "list.html",
+  bio: "bio.html",
+  help: "help.html",
+  report: "/archive_report.txt"
+};
 
   if (commands[v]) {
     window.location.href = commands[v];
