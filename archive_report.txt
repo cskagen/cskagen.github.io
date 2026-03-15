@@ -1,8 +1,8 @@
-Total items: 100
-Base drawings: 100
+Total items: 101
+Base drawings: 101
 Attached images: 0
 First: tegning_nr730
-Latest: tegning_nr853
+Latest: tegning_nr854
 
 Warnings:
 Ignored file: test.txt
@@ -108,3 +108,4 @@ tegning_nr850
 tegning_nr851
 tegning_nr852
 tegning_nr853
+tegning_nr854
