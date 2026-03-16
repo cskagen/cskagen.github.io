@@ -1,15 +1,22 @@
-function goToCommand(value, latestPage, firstPage) {
+function goToCommand(value, config) {
 
   const v = value.trim().toLowerCase();
 
   if (!v) return;
+
+  const {
+    latestPage,
+    firstPage,
+    homePage = "/",
+    archiveSequence = []
+  } = config;
 
   // --------------------------------------------------
   // direct number navigation
   // --------------------------------------------------
 
   if (/^\d+$/.test(v)) {
-    window.location.href = "tegning_nr" + v + ".html";
+    window.location.href = "/drawings/tegning_nr" + v + ".html";
     return;
   }
 
@@ -23,13 +30,13 @@ function goToCommand(value, latestPage, firstPage) {
   }
 
   // --------------------------------------------------
-// home command
-// --------------------------------------------------
+  // home command
+  // --------------------------------------------------
 
-if (v === "home") {
-  window.location.href = "/";
-  return;
-}
+  if (v === "home") {
+    window.location.href = homePage;
+    return;
+  }
 
   // --------------------------------------------------
   // random command
@@ -37,23 +44,10 @@ if (v === "home") {
 
   if (v === "random") {
 
-    fetch("/archive_report.json")
-      .then(r => r.json())
-      .then(data => {
+    if (!archiveSequence || archiveSequence.length === 0) return;
 
-        const seq = data.sequence;
-
-        if (!seq || seq.length === 0) return;
-
-        const choice = seq[Math.floor(Math.random() * seq.length)];
-
-        window.location.href = "/drawings/" + choice + ".html";
-
-      })
-      .catch(err => {
-        console.error("Random navigation failed", err);
-      });
-
+    const choice = archiveSequence[Math.floor(Math.random() * archiveSequence.length)];
+    window.location.href = "/drawings/" + choice + ".html";
     return;
   }
 
@@ -64,9 +58,6 @@ if (v === "home") {
   const commands = {
     latest: latestPage,
     first: firstPage,
-    list: "list.html",
-    bio: "bio.html",
-    help: "help.html",
     report: "/archive_report.txt"
   };
 
@@ -81,128 +72,191 @@ function setupViewer(config) {
   const {
     nextPage = null,
     prevPage = null,
-    latestPage = "tegning_latest.html",
-    firstPage = "tegning_nr783.html"
+    latestPage: latestPageInput = "tegning_latest.html",
+    firstPage: firstPageInput = null,
+    homePage = "/",
+    archiveReportPath = "/archive_report.json",
+    useArchiveReport = false
   } = config;
 
   const commandInput = document.getElementById("command");
   const swipeArea = document.getElementById("swipe-area");
 
-  // --------------------------------------------------
-  // console input
-  // --------------------------------------------------
+  let latestPage = latestPageInput;
+  let firstPage = firstPageInput;
+  let archiveSequence = [];
 
-  if (commandInput) {
+  function runSetup() {
 
-    commandInput.addEventListener("keydown", function (event) {
+    // --------------------------------------------------
+    // console input
+    // --------------------------------------------------
 
-      if (event.key === "Enter") {
+    if (commandInput) {
 
-        goToCommand(this.value, latestPage, firstPage);
+      commandInput.addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter") {
+          goToCommand(this.value, {
+            latestPage,
+            firstPage,
+            homePage,
+            archiveSequence
+          });
+        }
+
+      });
+
+    }
+
+    // --------------------------------------------------
+    // keyboard navigation
+    // --------------------------------------------------
+
+    document.addEventListener("keydown", function (event) {
+
+      const activeElement = document.activeElement;
+      const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
+      const typing = activeTag === "input" || activeTag === "textarea";
+
+      if (typing) return;
+
+      if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key)) {
+        event.preventDefault();
+      }
+
+      if (event.key === "ArrowRight" && nextPage) {
+        window.location.href = nextPage;
+      }
+
+      if (event.key === "ArrowLeft" && prevPage) {
+        window.location.href = prevPage;
+      }
+
+      if (event.key === "ArrowUp" && latestPage) {
+        window.location.href = latestPage;
+      }
+
+      if (event.key === "ArrowDown" && firstPage) {
+        window.location.href = firstPage;
+      }
+
+      // open full image
+
+      if (event.key === "f") {
+
+        const img = document.querySelector(".image-area img");
+
+        if (img) {
+          window.open(img.src, "_blank");
+        }
 
       }
 
     });
 
+    // --------------------------------------------------
+    // swipe navigation
+    // --------------------------------------------------
+
+    if (swipeArea) {
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+
+      swipeArea.addEventListener(
+        "touchstart",
+        function (event) {
+
+          const touch = event.changedTouches[0];
+
+          touchStartX = touch.screenX;
+          touchStartY = touch.screenY;
+
+        },
+        { passive: true }
+      );
+
+      swipeArea.addEventListener(
+        "touchend",
+        function (event) {
+
+          const touch = event.changedTouches[0];
+
+          touchEndX = touch.screenX;
+          touchEndY = touch.screenY;
+
+          const dx = touchEndX - touchStartX;
+          const dy = touchEndY - touchStartY;
+
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+
+            if (dx < 0 && nextPage) {
+              window.location.href = nextPage;
+            }
+
+            if (dx > 0 && prevPage) {
+              window.location.href = prevPage;
+            }
+
+          }
+
+        },
+        { passive: true }
+      );
+
+    }
+
   }
 
   // --------------------------------------------------
-  // keyboard navigation
+  // optional archive report loading
+  // used by homepage to discover first/latest dynamically
   // --------------------------------------------------
 
-  document.addEventListener("keydown", function (event) {
+  if (useArchiveReport) {
 
-    const activeElement = document.activeElement;
-    const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
-    const typing = activeTag === "input" || activeTag === "textarea";
+    fetch(archiveReportPath)
+      .then(r => r.json())
+      .then(data => {
 
-    if (typing) return;
-
-    if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key)) {
-      event.preventDefault();
-    }
-
-    if (event.key === "ArrowRight" && nextPage) {
-      window.location.href = nextPage;
-    }
-
-    if (event.key === "ArrowLeft" && prevPage) {
-      window.location.href = prevPage;
-    }
-
-    if (event.key === "ArrowUp") {
-      window.location.href = latestPage;
-    }
-
-    if (event.key === "ArrowDown") {
-      window.location.href = firstPage;
-    }
-
-    // open full image
-
-    if (event.key === "f") {
-
-      const img = document.querySelector(".image-area img");
-
-      if (img) {
-        window.open(img.src, "_blank");
-      }
-
-    }
-
-  });
-
-  // --------------------------------------------------
-  // swipe navigation
-  // --------------------------------------------------
-
-  if (swipeArea) {
-
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-
-    swipeArea.addEventListener(
-      "touchstart",
-      function (event) {
-
-        const touch = event.changedTouches[0];
-
-        touchStartX = touch.screenX;
-        touchStartY = touch.screenY;
-
-      },
-      { passive: true }
-    );
-
-    swipeArea.addEventListener(
-      "touchend",
-      function (event) {
-
-        const touch = event.changedTouches[0];
-
-        touchEndX = touch.screenX;
-        touchEndY = touch.screenY;
-
-        const dx = touchEndX - touchStartX;
-        const dy = touchEndY - touchStartY;
-
-        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-
-          if (dx < 0 && nextPage) {
-            window.location.href = nextPage;
-          }
-
-          if (dx > 0 && prevPage) {
-            window.location.href = prevPage;
-          }
-
+        if (data.latest) {
+          latestPage = "/drawings/" + data.latest + ".html";
         }
 
-      },
-      { passive: true }
-    );
+        if (data.first) {
+          firstPage = "/drawings/" + data.first + ".html";
+        }
+
+        if (Array.isArray(data.sequence)) {
+          archiveSequence = data.sequence;
+        }
+
+        runSetup();
+
+      })
+      .catch(err => {
+        console.error("Archive report load failed", err);
+        runSetup();
+      });
+
+  } else {
+
+    fetch(archiveReportPath)
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.sequence)) {
+          archiveSequence = data.sequence;
+        }
+      })
+      .catch(err => {
+        console.error("Archive report load failed", err);
+      })
+      .finally(() => {
+        runSetup();
+      });
 
   }
 
