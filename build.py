@@ -162,6 +162,42 @@ def write_archive_report(items, ignored):
         "\n".join(lines) + "\n",
         encoding="utf-8"
     )
+    
+# --------------------------------------------------
+# SITEMAP
+# --------------------------------------------------
+
+def write_sitemap(items):
+
+    base_url = "https://cskagen.github.io"
+
+    lines = []
+
+    lines.append('<?xml version="1.0" encoding="UTF-8"?>')
+    lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    # homepage
+
+    lines.append("  <url>")
+    lines.append(f"    <loc>{base_url}/</loc>")
+    lines.append("  </url>")
+
+    # drawing pages
+
+    for item in items:
+
+        url = f"{base_url}/drawings/{item['html_name']}"
+
+        lines.append("  <url>")
+        lines.append(f"    <loc>{url}</loc>")
+        lines.append("  </url>")
+
+    lines.append("</urlset>")
+
+    Path("sitemap.xml").write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8"
+    )
 
     # JSON REPORT
 
@@ -288,6 +324,8 @@ def build():
     items = sort_items(items)
 
     write_archive_report(items, ignored)
+
+    write_sitemap(items)
 
     clean_output_dir()
 
