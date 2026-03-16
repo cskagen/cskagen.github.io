@@ -1,4 +1,3 @@
-import os
 import re
 import json
 from pathlib import Path
@@ -13,8 +12,11 @@ OUTPUT_DIR = Path("drawings")
 STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
 
+BASE_URL = "https://cskagen.github.io"
+
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 SUB_RE = re.compile(r"^tegning_nr(\d+)_(\d{2})\.jpg$")
+
 
 # --------------------------------------------------
 # PARSE
@@ -44,7 +46,8 @@ def parse_images():
             base = int(m_main.group(1))
             sub = 0
             slug = f"tegning_nr{base}"
-            title = slug
+            page_title = f"tegning nr {base} – Christian Skagen"
+            visible_title = slug
             alt = f"tegning nr {base}"
 
         elif m_sub:
@@ -52,7 +55,8 @@ def parse_images():
             base = int(m_sub.group(1))
             sub = int(m_sub.group(2))
             slug = f"tegning_nr{base}_{sub:02d}"
-            title = slug
+            page_title = f"tegning nr {base}, image {sub:02d} – Christian Skagen"
+            visible_title = slug
             alt = f"tegning nr {base}, image {sub:02d}"
 
         else:
@@ -72,15 +76,18 @@ def parse_images():
             "base": base,
             "sub": sub,
             "slug": slug,
-            "title": title,
+            "page_title": page_title,
+            "visible_title": visible_title,
             "alt": alt,
-            "html_name": f"{slug}.html"
+            "html_name": f"{slug}.html",
+            "canonical_url": f"{BASE_URL}/drawings/{slug}.html"
         })
 
     if not items:
         raise SystemExit("ERROR: No valid images found in images/")
 
     return items, ignored
+
 
 # --------------------------------------------------
 # VALIDATE
@@ -113,13 +120,14 @@ def validate(items):
                 + ", ".join(f"_{m:02d}" for m in missing if m != 0)
             )
 
+
 # --------------------------------------------------
 # SORT
 # --------------------------------------------------
 
 def sort_items(items):
-
     return sorted(items, key=lambda x: (x["base"], x["sub"]))
+
 
 # --------------------------------------------------
 # ARCHIVE REPORT
@@ -133,8 +141,6 @@ def write_archive_report(items, ignored):
 
     first = items[0]["slug"]
     latest = items[-1]["slug"]
-
-    # TEXT REPORT
 
     lines = []
 
@@ -162,44 +168,6 @@ def write_archive_report(items, ignored):
         "\n".join(lines) + "\n",
         encoding="utf-8"
     )
-    
-# --------------------------------------------------
-# SITEMAP
-# --------------------------------------------------
-
-def write_sitemap(items):
-
-    base_url = "https://cskagen.github.io"
-
-    lines = []
-
-    lines.append('<?xml version="1.0" encoding="UTF-8"?>')
-    lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-
-    # homepage
-
-    lines.append("  <url>")
-    lines.append(f"    <loc>{base_url}/</loc>")
-    lines.append("  </url>")
-
-    # drawing pages
-
-    for item in items:
-
-        url = f"{base_url}/drawings/{item['html_name']}"
-
-        lines.append("  <url>")
-        lines.append(f"    <loc>{url}</loc>")
-        lines.append("  </url>")
-
-    lines.append("</urlset>")
-
-    Path("sitemap.xml").write_text(
-        "\n".join(lines) + "\n",
-        encoding="utf-8"
-    )
-
-    # JSON REPORT
 
     report = {
         "total_items": total,
@@ -216,6 +184,35 @@ def write_sitemap(items):
         encoding="utf-8"
     )
 
+
+# --------------------------------------------------
+# SITEMAP
+# --------------------------------------------------
+
+def write_sitemap(items):
+
+    lines = []
+
+    lines.append('<?xml version="1.0" encoding="UTF-8"?>')
+    lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    lines.append("  <url>")
+    lines.append(f"    <loc>{BASE_URL}/</loc>")
+    lines.append("  </url>")
+
+    for item in items:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{item['canonical_url']}</loc>")
+        lines.append("  </url>")
+
+    lines.append("</urlset>")
+
+    Path("sitemap.xml").write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8"
+    )
+
+
 # --------------------------------------------------
 # HTML RENDERING
 # --------------------------------------------------
@@ -223,8 +220,15 @@ def write_sitemap(items):
 def render_page(item, prev_html, next_html, first_html):
 
     image_src = f"../images/{item['image_name']}"
-    title = item["title"]
+    page_title = item["page_title"]
+    visible_title = item["visible_title"]
     alt = item["alt"]
+    canonical_url = item["canonical_url"]
+
+    meta_description = (
+        f"Numbered drawing archive page for {visible_title.replace('_', ' ')} "
+        f"by Christian Skagen."
+    )
 
     if next_html:
 
@@ -250,7 +254,9 @@ def render_page(item, prev_html, next_html, first_html):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>{title}</title>
+<title>{page_title}</title>
+<meta name="description" content="{meta_description}">
+<link rel="canonical" href="{canonical_url}">
 
 <link rel="stylesheet" href="{STYLE_PATH}">
 
@@ -262,7 +268,7 @@ def render_page(item, prev_html, next_html, first_html):
 
 <h1>
 <a href="{image_src}" target="_blank">
-{title}
+{visible_title}
 </a>
 </h1>
 
@@ -283,7 +289,10 @@ setupViewer({{
   nextPage: {next_js},
   prevPage: {prev_js},
   latestPage: "tegning_latest.html",
-  firstPage: "{first_html}"
+  firstPage: "{first_html}",
+  homePage: "/",
+  archiveReportPath: "/archive_report.json",
+  useArchiveReport: false
 }})
 
 </script>
@@ -291,6 +300,7 @@ setupViewer({{
 </body>
 </html>
 '''
+
 
 # --------------------------------------------------
 # CLEAN OUTPUT
@@ -308,8 +318,8 @@ def clean_output_dir():
         name = path.name
 
         if name == "tegning_latest.html" or re.match(r"^tegning_nr\d+(?:_\d{2})?\.html$", name):
-
             path.unlink()
+
 
 # --------------------------------------------------
 # BUILD
@@ -324,7 +334,6 @@ def build():
     items = sort_items(items)
 
     write_archive_report(items, ignored)
-
     write_sitemap(items)
 
     clean_output_dir()
@@ -333,8 +342,8 @@ def build():
 
     for i, item in enumerate(items):
 
-        prev_html = items[i-1]["html_name"] if i > 0 else None
-        next_html = items[i+1]["html_name"] if i < len(items)-1 else None
+        prev_html = items[i - 1]["html_name"] if i > 0 else None
+        next_html = items[i + 1]["html_name"] if i < len(items) - 1 else None
 
         html = render_page(
             item,
@@ -361,8 +370,8 @@ def build():
     print(f"First: {items[0]['slug']}")
     print(f"Latest: {items[-1]['slug']}")
 
+
 # --------------------------------------------------
 
 if __name__ == "__main__":
-
     build()
