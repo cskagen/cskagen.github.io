@@ -56,10 +56,11 @@ function goToCommand(value, config) {
   // --------------------------------------------------
 
   const commands = {
-    latest: latestPage,
-    first: firstPage,
-    report: "/archive_report.txt"
-  };
+  latest: latestPage,
+  first: firstPage,
+  archive: "/archive.html",
+  report: "/archive_report.txt"
+};
 
   if (commands[v]) {
     window.location.href = commands[v];
