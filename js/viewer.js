@@ -64,7 +64,6 @@ function goToCommand(value, config) {
   if (commands[v]) {
     window.location.href = commands[v];
   }
-
 }
 
 function setupViewer(config) {
@@ -93,9 +92,7 @@ function setupViewer(config) {
     // --------------------------------------------------
 
     if (commandInput) {
-
       commandInput.addEventListener("keydown", function (event) {
-
         if (event.key === "Enter") {
           goToCommand(this.value, {
             latestPage,
@@ -104,13 +101,17 @@ function setupViewer(config) {
             archiveSequence
           });
         }
-
       });
-
     }
 
     // --------------------------------------------------
     // keyboard navigation
+    // drawing pages:
+    //   right = next
+    //   left = prev
+    // homepage:
+    //   right = latest
+    //   left = first
     // --------------------------------------------------
 
     document.addEventListener("keydown", function (event) {
@@ -125,12 +126,20 @@ function setupViewer(config) {
         event.preventDefault();
       }
 
-      if (event.key === "ArrowRight" && nextPage) {
-        window.location.href = nextPage;
+      if (event.key === "ArrowRight") {
+        if (nextPage) {
+          window.location.href = nextPage;
+        } else if (latestPage) {
+          window.location.href = latestPage;
+        }
       }
 
-      if (event.key === "ArrowLeft" && prevPage) {
-        window.location.href = prevPage;
+      if (event.key === "ArrowLeft") {
+        if (prevPage) {
+          window.location.href = prevPage;
+        } else if (firstPage) {
+          window.location.href = firstPage;
+        }
       }
 
       if (event.key === "ArrowUp" && latestPage) {
@@ -141,22 +150,28 @@ function setupViewer(config) {
         window.location.href = firstPage;
       }
 
+      // --------------------------------------------------
       // open full image
+      // only works on drawing pages with an image
+      // --------------------------------------------------
 
       if (event.key === "f") {
-
         const img = document.querySelector(".image-area img");
 
         if (img) {
           window.open(img.src, "_blank");
         }
-
       }
-
     });
 
     // --------------------------------------------------
     // swipe navigation
+    // drawing pages:
+    //   swipe left = next
+    //   swipe right = prev
+    // homepage:
+    //   swipe left = latest
+    //   swipe right = first
     // --------------------------------------------------
 
     if (swipeArea) {
@@ -169,12 +184,9 @@ function setupViewer(config) {
       swipeArea.addEventListener(
         "touchstart",
         function (event) {
-
           const touch = event.changedTouches[0];
-
           touchStartX = touch.screenX;
           touchStartY = touch.screenY;
-
         },
         { passive: true }
       );
@@ -182,7 +194,6 @@ function setupViewer(config) {
       swipeArea.addEventListener(
         "touchend",
         function (event) {
-
           const touch = event.changedTouches[0];
 
           touchEndX = touch.screenX;
@@ -193,27 +204,32 @@ function setupViewer(config) {
 
           if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
 
-            if (dx < 0 && nextPage) {
-              window.location.href = nextPage;
+            if (dx < 0) {
+              if (nextPage) {
+                window.location.href = nextPage;
+              } else if (latestPage) {
+                window.location.href = latestPage;
+              }
             }
 
-            if (dx > 0 && prevPage) {
-              window.location.href = prevPage;
+            if (dx > 0) {
+              if (prevPage) {
+                window.location.href = prevPage;
+              } else if (firstPage) {
+                window.location.href = firstPage;
+              }
             }
-
           }
-
         },
         { passive: true }
       );
-
     }
-
   }
 
   // --------------------------------------------------
   // optional archive report loading
-  // used by homepage to discover first/latest dynamically
+  // homepage uses this to discover first/latest/sequence
+  // drawing pages still use fixed next/prev plus sequence
   // --------------------------------------------------
 
   if (useArchiveReport) {
@@ -235,7 +251,6 @@ function setupViewer(config) {
         }
 
         runSetup();
-
       })
       .catch(err => {
         console.error("Archive report load failed", err);
@@ -257,7 +272,5 @@ function setupViewer(config) {
       .finally(() => {
         runSetup();
       });
-
   }
-
 }
