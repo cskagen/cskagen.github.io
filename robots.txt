@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cskagen.github.io/sitemap.xml
