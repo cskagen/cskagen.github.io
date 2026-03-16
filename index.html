@@ -1,10 +1,220 @@
 <!doctype html>
 <html>
 <head>
+
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=drawings/tegning_latest.html">
-<title>cskagen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Christian Skagen – drawings</title>
+<meta name="description" content="Christian Skagen: public sequential archive of numbered drawings.">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+.index-text{
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  text-align:left;
+  font-size:16px;
+  line-height:1.5;
+  white-space:pre-line;
+}
+
+@media (max-width:600px){
+  .index-text{
+    font-size:14px;
+  }
+}
+</style>
+
 </head>
+
 <body>
+
+<div class="wrapper">
+
+<h1>
+<a href="/">drawings</a>
+</h1>
+
+<div class="image-area" id="swipe-area">
+
+<div class="index-text">
+Christian Skagen is a Norwegian visual artist working with drawing and constructed systems.
+
+This site functions as a public sequential archive of numbered drawings.
+
+Most drawings consist of linear fields drawn with a fountain pen and ruler.
+The number stamp on each drawing contains two pieces of information:
+
+drawing number (xxxx00000000)
+date (0000xxxxxx)
+
+Navigation:
+
+arrow keys
+swipe gestures
+console commands:
+
+random
+latest
+first
+print
+xxx (enter drawing number)
+</div>
+
+</div>
+
+<div class="prompt-wrap">
+<span class="prompt">&gt;</span>
+<input id="command" type="text" autocomplete="off" spellcheck="false">
+</div>
+
+</div>
+
+<script>
+
+(function(){
+
+const commandInput = document.getElementById("command");
+const swipeArea = document.getElementById("swipe-area");
+
+let firstPage = null;
+let latestPage = null;
+let sequence = [];
+
+function loadArchive(){
+
+  fetch("/archive_report.json")
+  .then(r => r.json())
+  .then(data => {
+
+    if(data.first){
+      firstPage = "/drawings/" + data.first + ".html";
+    }
+
+    if(data.latest){
+      latestPage = "/drawings/" + data.latest + ".html";
+    }
+
+    if(Array.isArray(data.sequence)){
+      sequence = data.sequence;
+    }
+
+  })
+  .catch(err => {
+    console.error("archive load failed", err);
+  });
+
+}
+
+function goToCommand(value){
+
+  const v = value.trim().toLowerCase();
+
+  if(!v) return;
+
+  if(/^\d+$/.test(v)){
+    window.location.href="/drawings/tegning_nr"+v+".html";
+    return;
+  }
+
+  if(v==="print"){
+    window.print();
+    return;
+  }
+
+  if(v==="random"){
+
+    if(!sequence.length) return;
+
+    const choice=sequence[Math.floor(Math.random()*sequence.length)];
+
+    window.location.href="/drawings/"+choice+".html";
+    return;
+  }
+
+  if(v==="latest" && latestPage){
+    window.location.href=latestPage;
+  }
+
+  if(v==="first" && firstPage){
+    window.location.href=firstPage;
+  }
+
+}
+
+commandInput.addEventListener("keydown",function(e){
+
+  if(e.key==="Enter"){
+    goToCommand(this.value);
+  }
+
+});
+
+document.addEventListener("keydown",function(event){
+
+  const active=document.activeElement;
+  const typing=active && active.tagName.toLowerCase()==="input";
+
+  if(typing) return;
+
+  if(["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(event.key)){
+    event.preventDefault();
+  }
+
+  if((event.key==="ArrowRight"||event.key==="ArrowUp") && latestPage){
+    window.location.href=latestPage;
+  }
+
+  if((event.key==="ArrowLeft"||event.key==="ArrowDown") && firstPage){
+    window.location.href=firstPage;
+  }
+
+});
+
+if(swipeArea){
+
+let startX=0;
+let startY=0;
+
+swipeArea.addEventListener("touchstart",function(e){
+
+const t=e.changedTouches[0];
+startX=t.screenX;
+startY=t.screenY;
+
+},{passive:true});
+
+swipeArea.addEventListener("touchend",function(e){
+
+const t=e.changedTouches[0];
+
+const dx=t.screenX-startX;
+const dy=t.screenY-startY;
+
+if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
+
+if(dx<0 && latestPage){
+window.location.href=latestPage;
+}
+
+if(dx>0 && firstPage){
+window.location.href=firstPage;
+}
+
+}
+
+},{passive:true});
+
+}
+
+loadArchive();
+
+})();
+
+</script>
+
 </body>
 </html>
