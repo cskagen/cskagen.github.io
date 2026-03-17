@@ -1,13 +1,11 @@
 import re
 import json
 from pathlib import Path
+from html import escape
 
 # ==================================================
 # CONFIG
 # ==================================================
-# Central settings used throughout the build script.
-# If the site structure changes later, this is the
-# first place to check.
 
 IMAGE_DIR = Path("images")
 OUTPUT_DIR = Path("drawings")
@@ -16,27 +14,159 @@ STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
 
 BASE_URL = "https://cskagen.github.io"
+SITE_NAME = "Christian Skagen – drawings"
+PERSON_NAME = "Christian Skagen"
+DEFAULT_LOCALE = "en"
 
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 SUB_RE = re.compile(r"^tegning_nr(\d+)_(\d{2})\.jpg$")
+
+HOME_TITLE = "Christian Skagen – drawings"
+HOME_DESCRIPTION = (
+    "Christian Skagen is a Norwegian visual artist working with systematic ink drawing, "
+    "sequential archives, and constructed meditative image fields."
+)
+ARCHIVE_TITLE = "archive – Christian Skagen"
+ARCHIVE_DESCRIPTION = (
+    "Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen."
+)
+GLOBAL_KEYWORDS = [
+    "Christian Skagen",
+    "Norwegian artist",
+    "contemporary drawing",
+    "ink drawing",
+    "conceptual drawing",
+    "sequential archive",
+    "visual art",
+]
+
+INDEX_INTRO = """Christian Skagen is a Norwegian visual artist working with drawing as constructed, meditative system.
+
+This site functions as a public sequential archive of numbered drawings.
+
+Most drawings consist of linear fields drawn with a fountain pen and ruler.
+The number stamp on each drawing contains two pieces of information:
+
+drawing number (xxxx00000000)
+date (0000xxxxxx)
+
+Navigation:
+
+arrow keys
+swipe gestures
+console commands:
+
+random
+latest
+first
+home
+archive
+print
+xxx (enter drawing number)"""
+
+ARCHIVE_INTRO = (
+    "Sequential archive of numbered ink drawings by Christian Skagen. "
+    "Use the command line below or select a drawing number."
+)
+
+
+# ==================================================
+# HELPERS
+# ==================================================
+
+
+def json_ld(data):
+    return json.dumps(data, ensure_ascii=False, indent=2)
+
+
+
+def html_escape(text):
+    return escape(text, quote=True)
+
+
+
+def abs_url(path: str) -> str:
+    if path.startswith("http://") or path.startswith("https://"):
+        return path
+    if not path.startswith("/"):
+        path = "/" + path
+    return BASE_URL + path
+
+
+
+def make_keywords(*extra):
+    merged = GLOBAL_KEYWORDS + [x for x in extra if x]
+    deduped = []
+    seen = set()
+    for item in merged:
+        if item not in seen:
+            deduped.append(item)
+            seen.add(item)
+    return ", ".join(deduped)
+
+
+
+def page_head(*, title, description, canonical_url, og_image=None, structured_data=None, css_path="css/style.css"):
+    og_image = og_image or abs_url("/images/og-default.jpg")
+    parts = [
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        f"<title>{html_escape(title)}</title>",
+        f'<meta name="description" content="{html_escape(description)}">',
+        f'<meta name="keywords" content="{html_escape(make_keywords())}">',
+        '<meta name="robots" content="index,follow,max-image-preview:large">',
+        f'<link rel="canonical" href="{html_escape(canonical_url)}">',
+        f'<meta property="og:type" content="website">',
+        f'<meta property="og:site_name" content="{html_escape(SITE_NAME)}">',
+        f'<meta property="og:locale" content="{DEFAULT_LOCALE}">',
+        f'<meta property="og:title" content="{html_escape(title)}">',
+        f'<meta property="og:description" content="{html_escape(description)}">',
+        f'<meta property="og:url" content="{html_escape(canonical_url)}">',
+        f'<meta property="og:image" content="{html_escape(og_image)}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{html_escape(title)}">',
+        f'<meta name="twitter:description" content="{html_escape(description)}">',
+        f'<meta name="twitter:image" content="{html_escape(og_image)}">',
+        f'<link rel="stylesheet" href="{html_escape(css_path)}">',
+    ]
+    if structured_data is not None:
+        parts.insert(
+            6,
+            '<script type="application/ld+json">\n' + json_ld(structured_data) + '\n</script>'
+        )
+    return "\n".join(parts)
+
+
+
+def website_graph(extra_nodes=None):
+    graph = [
+        {
+            "@type": "Person",
+            "@id": BASE_URL + "/#person",
+            "name": PERSON_NAME,
+            "url": BASE_URL + "/",
+        },
+        {
+            "@type": "WebSite",
+            "@id": BASE_URL + "/#website",
+            "url": BASE_URL + "/",
+            "name": SITE_NAME,
+            "description": HOME_DESCRIPTION,
+            "creator": {"@id": BASE_URL + "/#person"},
+            "inLanguage": DEFAULT_LOCALE,
+        },
+    ]
+    if extra_nodes:
+        graph.extend(extra_nodes)
+    return {"@context": "https://schema.org", "@graph": graph}
 
 
 # ==================================================
 # PARSE IMAGES
 # ==================================================
-# Reads the images folder and converts valid filenames
-# into structured archive items.
-#
-# Accepted patterns:
-#   tegning_nr852.jpg
-#   tegning_nr852_01.jpg
-#
-# Output:
-#   a list of item dictionaries
-#   a list of ignored filenames
+
 
 def parse_images():
-
     if not IMAGE_DIR.exists():
         raise SystemExit("ERROR: images/ folder not found.")
 
@@ -45,43 +175,42 @@ def parse_images():
     seen_positions = set()
 
     for path in sorted(IMAGE_DIR.iterdir()):
-
         if not path.is_file():
             continue
 
         name = path.name
-
         m_main = MAIN_RE.match(name)
         m_sub = SUB_RE.match(name)
 
         if m_main:
-
             base = int(m_main.group(1))
             sub = 0
             slug = f"tegning_nr{base}"
-            page_title = f"tegning nr {base} – Christian Skagen"
             visible_title = slug
-            alt = f"tegning nr {base}"
+            display_name = f"tegning nr {base}"
+            page_title = f"tegning nr {base} – Christian Skagen"
+            alt = f"Ink drawing nr {base} by Christian Skagen"
 
         elif m_sub:
-
             base = int(m_sub.group(1))
             sub = int(m_sub.group(2))
             slug = f"tegning_nr{base}_{sub:02d}"
-            page_title = f"tegning nr {base}, image {sub:02d} – Christian Skagen"
             visible_title = slug
-            alt = f"tegning nr {base}, image {sub:02d}"
+            display_name = f"tegning nr {base}, image {sub:02d}"
+            page_title = f"tegning nr {base}, image {sub:02d} – Christian Skagen"
+            alt = f"Ink drawing nr {base}, image {sub:02d}, by Christian Skagen"
 
         else:
             ignored.append(name)
             continue
 
         key = (base, sub)
-
         if key in seen_positions:
             raise SystemExit(f"ERROR: Duplicate sequence position for {name}")
-
         seen_positions.add(key)
+
+        image_url = f"{BASE_URL}/images/{name}"
+        canonical_url = f"{BASE_URL}/drawings/{slug}.html"
 
         items.append({
             "image_name": name,
@@ -90,9 +219,11 @@ def parse_images():
             "slug": slug,
             "page_title": page_title,
             "visible_title": visible_title,
+            "display_name": display_name,
             "alt": alt,
             "html_name": f"{slug}.html",
-            "canonical_url": f"{BASE_URL}/drawings/{slug}.html"
+            "canonical_url": canonical_url,
+            "image_url": image_url,
         })
 
     if not items:
@@ -102,69 +233,42 @@ def parse_images():
 
 
 # ==================================================
-# VALIDATE SEQUENCE
+# VALIDATE / SORT
 # ==================================================
-# Ensures that subordinate images are complete.
-#
-# Example:
-#   if tegning_nr852_01 exists,
-#   then tegning_nr852.jpg must also exist.
-#
-# Also checks that there are no missing subordinate
-# numbers in a sequence.
+
 
 def validate(items):
-
     groups = {}
-
     for item in items:
         groups.setdefault(item["base"], []).append(item["sub"])
 
     for base, subs in groups.items():
-
         subs = sorted(subs)
-
         if 0 not in subs:
             raise SystemExit(
                 f"ERROR: tegning_nr{base}_01 exists but tegning_nr{base}.jpg is missing"
             )
 
         expected = list(range(0, max(subs) + 1))
-
         if subs != expected:
-
             missing = sorted(set(expected) - set(subs))
-
             raise SystemExit(
                 f"ERROR: Missing subordinate image(s) for tegning_nr{base}: "
                 + ", ".join(f"_{m:02d}" for m in missing if m != 0)
             )
 
 
-# ==================================================
-# SORT ITEMS
-# ==================================================
-# Sort archive items numerically by:
-#   drawing number
-#   subordinate image number
 
 def sort_items(items):
     return sorted(items, key=lambda x: (x["base"], x["sub"]))
 
 
 # ==================================================
-# ARCHIVE REPORT
+# REPORT / SITEMAP
 # ==================================================
-# Writes two report files:
-#
-# 1. archive_report.txt
-#    Human-readable overview
-#
-# 2. archive_report.json
-#    Machine-readable data used by viewer.js and index
+
 
 def write_archive_report(items, ignored):
-
     total = len(items)
     base_drawings = sum(1 for x in items if x["sub"] == 0)
     attached = total - base_drawings
@@ -172,32 +276,25 @@ def write_archive_report(items, ignored):
     first = items[0]["slug"]
     latest = items[-1]["slug"]
 
-    lines = []
-
-    lines.append(f"Total items: {total}")
-    lines.append(f"Base drawings: {base_drawings}")
-    lines.append(f"Attached images: {attached}")
-    lines.append(f"First: {first}")
-    lines.append(f"Latest: {latest}")
-    lines.append("")
-    lines.append("Warnings:")
+    lines = [
+        f"Total items: {total}",
+        f"Base drawings: {base_drawings}",
+        f"Attached images: {attached}",
+        f"First: {first}",
+        f"Latest: {latest}",
+        "",
+        "Warnings:",
+    ]
 
     if ignored:
-        for name in ignored:
-            lines.append(f"Ignored file: {name}")
+        lines.extend(f"Ignored file: {name}" for name in ignored)
     else:
         lines.append("None")
 
-    lines.append("")
-    lines.append("Sequence:")
+    lines.extend(["", "Sequence:"])
+    lines.extend(item["slug"] for item in items)
 
-    for item in items:
-        lines.append(item["slug"])
-
-    Path("archive_report.txt").write_text(
-        "\n".join(lines) + "\n",
-        encoding="utf-8"
-    )
+    Path("archive_report.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     report = {
         "total_items": total,
@@ -206,144 +303,111 @@ def write_archive_report(items, ignored):
         "first": first,
         "latest": latest,
         "ignored": ignored,
-        "sequence": [item["slug"] for item in items]
+        "sequence": [item["slug"] for item in items],
     }
-
-    Path("archive_report.json").write_text(
-        json.dumps(report, indent=2),
-        encoding="utf-8"
-    )
+    Path("archive_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
 
 
-# ==================================================
-# SITEMAP
-# ==================================================
-# Generates sitemap.xml for search engines.
-#
-# Includes:
-#   homepage
-#   every drawing page
 
 def write_sitemap(items):
-
-    lines = []
-
-    lines.append('<?xml version="1.0" encoding="UTF-8"?>')
-    lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-
-    lines.append("  <url>")
-    lines.append(f"    <loc>{BASE_URL}/</loc>")
-    lines.append("  </url>")
-
-    lines.append("  <url>")
-    lines.append(f"    <loc>{BASE_URL}/archive.html</loc>")
-    lines.append("  </url>")
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        "  <url>",
+        f"    <loc>{BASE_URL}/</loc>",
+        "  </url>",
+        "  <url>",
+        f"    <loc>{BASE_URL}/archive.html</loc>",
+        "  </url>",
+    ]
 
     for item in items:
-        lines.append("  <url>")
-        lines.append(f"    <loc>{item['canonical_url']}</loc>")
-        lines.append("  </url>")
+        lines.extend([
+            "  <url>",
+            f"    <loc>{item['canonical_url']}</loc>",
+            "  </url>",
+        ])
 
     lines.append("</urlset>")
+    Path("sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    Path("sitemap.xml").write_text(
-        "\n".join(lines) + "\n",
-        encoding="utf-8"
+
+# ==================================================
+# PAGE BUILDERS
+# ==================================================
+
+
+def write_home_page(items):
+    first_item = items[0]
+    latest_item = items[-1]
+
+    structured = website_graph([
+        {
+            "@type": "CollectionPage",
+            "@id": BASE_URL + "/#home",
+            "url": BASE_URL + "/",
+            "name": HOME_TITLE,
+            "description": HOME_DESCRIPTION,
+            "isPartOf": {"@id": BASE_URL + "/#website"},
+            "about": {"@id": BASE_URL + "/#person"},
+        }
+    ])
+
+    head = page_head(
+        title=HOME_TITLE,
+        description=HOME_DESCRIPTION,
+        canonical_url=BASE_URL + "/",
+        og_image=latest_item["image_url"],
+        structured_data=structured,
+        css_path="css/style.css",
     )
 
-
-# ==================================================
-# ARCHIVE PAGE
-# ==================================================
-# Generates a simple master index page:
-#   /archive.html
-#
-# This is a visible list of all drawing numbers.
-
-def write_archive_page(items):
-
-    lines = []
-
-    lines.append("""<!doctype html>
+    html = f'''<!doctype html>
 <html>
 <head>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>archive – Christian Skagen</title>
-<meta name="description" content="Archive index of numbered drawings by Christian Skagen.">
-<link rel="canonical" href="https://cskagen.github.io/archive.html">
-
-<link rel="stylesheet" href="css/style.css">
-
+<meta name="google-site-verification" content="tyE3vdezEKc1F00i3hvjLin892w6CZbKQboJcbj_Azk">
+{head}
 <style>
-.archive-list{
+.index-text{{
   width:100%;
   max-width:720px;
   margin:auto;
   text-align:left;
   font-size:16px;
-  line-height:1.6;
-}
-
-.archive-list a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.archive-list a:hover{
-  text-decoration:underline;
-}
-
-@media (max-width:600px){
-  .archive-list{
-    font-size:14px;
-  }
-}
+  line-height:1.5;
+  white-space:pre-line;
+}}
+.visually-hidden{{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}}
+@media (max-width:600px){{
+  .index-text{{font-size:14px;}}
+}}
 </style>
-
 </head>
-
 <body>
-
 <div class="wrapper">
-
-<h1>
-<a href="/">archive</a>
-</h1>
-
+<h1><a href="/">drawings</a></h1>
 <div class="image-area" id="swipe-area">
-<div class="archive-list">
-""")
-
-    for item in items:
-        base = item["base"]
-        sub = item["sub"]
-        href = f"drawings/{item['html_name']}"
-
-        if sub == 0:
-            label = f"{base}"
-        else:
-            label = f"{base}_{sub:02d}"
-
-        lines.append(f'<div><a href="{href}">{label}</a></div>')
-
-    lines.append("""
+<div class="index-text">{INDEX_INTRO}</div>
 </div>
-</div>
-
+<p class="visually-hidden">{HOME_DESCRIPTION} The archive currently spans numbered drawings from {first_item['display_name']} to {latest_item['display_name']}.</p>
 <div class="prompt-wrap">
 <span class="prompt">&gt;</span>
-<input id="command" type="text" autocomplete="off" spellcheck="false">
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
-
 </div>
-
 <script src="js/viewer.js"></script>
-
 <script>
-setupViewer({
+setupViewer({{
   nextPage: null,
   prevPage: null,
   latestPage: null,
@@ -351,83 +415,183 @@ setupViewer({
   useArchiveReport: true,
   archiveReportPath: "/archive_report.json",
   homePage: "/"
-})
+}})
 </script>
-
 </body>
 </html>
-""")
-
-    Path("archive.html").write_text(
-        "\n".join(lines),
-        encoding="utf-8"
-    )
+'''
+    Path("index.html").write_text(html, encoding="utf-8")
 
 
-# ==================================================
-# RENDER DRAWING PAGE
-# ==================================================
-# Generates one HTML page for each drawing.
-#
-# Adds:
-#   title
-#   meta description
-#   canonical URL
-#   JSON-LD structured data
-#   image block
-#   console input
-#   viewer.js navigation config
 
-def render_page(item, prev_html, next_html, first_html):
-
-    image_src = f"../images/{item['image_name']}"
-    page_title = item["page_title"]
-    visible_title = item["visible_title"]
-    alt = item["alt"]
-    canonical_url = item["canonical_url"]
-
-    meta_description = (
-        f"Numbered drawing archive page for {visible_title.replace('_', ' ')} "
-        f"by Christian Skagen."
-    )
-
-    structured_data = {
-        "@context": "https://schema.org",
-        "@type": "VisualArtwork",
-        "@id": canonical_url + "#artwork",
-        "url": canonical_url,
-        "name": visible_title.replace("_", " "),
-        "creator": {
-            "@type": "Person",
-            "name": "Christian Skagen",
-            "url": BASE_URL + "/"
-        },
-        "image": BASE_URL + "/images/" + item["image_name"],
-        "artform": "Drawing",
-        "artMedium": "Fountain pen and ruler on paper",
-        "isPartOf": {
-            "@type": "WebSite",
-            "@id": BASE_URL + "/#website",
-            "url": BASE_URL + "/",
-            "name": "Christian Skagen – drawings"
+def write_archive_page(items):
+    latest_item = items[-1]
+    structured = website_graph([
+        {
+            "@type": "CollectionPage",
+            "@id": BASE_URL + "/archive.html#collection",
+            "url": BASE_URL + "/archive.html",
+            "name": "Archive of numbered drawings",
+            "description": ARCHIVE_DESCRIPTION,
+            "isPartOf": {"@id": BASE_URL + "/#website"},
+            "about": {"@id": BASE_URL + "/#person"},
         }
+    ])
+
+    head = page_head(
+        title=ARCHIVE_TITLE,
+        description=ARCHIVE_DESCRIPTION,
+        canonical_url=BASE_URL + "/archive.html",
+        og_image=latest_item["image_url"],
+        structured_data=structured,
+        css_path="css/style.css",
+    )
+
+    lines = [
+        "<!doctype html>",
+        "<html>",
+        "<head>",
+        head,
+        "<style>",
+        ".archive-list{width:100%;max-width:720px;margin:auto;text-align:left;font-size:16px;line-height:1.6;}",
+        ".archive-list a{color:inherit;text-decoration:none;}",
+        ".archive-list a:hover{text-decoration:underline;}",
+        ".archive-meta{width:100%;max-width:720px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
+        "@media (max-width:600px){.archive-list{font-size:14px;}}",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="wrapper">',
+        '<h1><a href="/">archive</a></h1>',
+        f'<div class="archive-meta">{html_escape(ARCHIVE_INTRO)}</div>',
+        '<div class="image-area" id="swipe-area">',
+        '<div class="archive-list">',
+    ]
+
+    for item in items:
+        label = str(item["base"]) if item["sub"] == 0 else f'{item["base"]}_{item["sub"]:02d}'
+        href = f'drawings/{item["html_name"]}'
+        lines.append(f'<div><a href="{href}">{label}</a></div>')
+
+    lines.extend([
+        "</div>",
+        "</div>",
+        '<div class="prompt-wrap">',
+        '<span class="prompt">&gt;</span>',
+        '<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">',
+        "</div>",
+        "</div>",
+        '<script src="js/viewer.js"></script>',
+        "<script>",
+        "setupViewer({",
+        "  nextPage: null,",
+        "  prevPage: null,",
+        "  latestPage: null,",
+        "  firstPage: null,",
+        "  useArchiveReport: true,",
+        "  archiveReportPath: \"/archive_report.json\",",
+        "  homePage: \"/\"",
+        "})",
+        "</script>",
+        "</body>",
+        "</html>",
+    ])
+
+    Path("archive.html").write_text("\n".join(lines), encoding="utf-8")
+
+
+
+def artwork_structured_data(item):
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Person",
+                "@id": BASE_URL + "/#person",
+                "name": PERSON_NAME,
+                "url": BASE_URL + "/",
+            },
+            {
+                "@type": "WebSite",
+                "@id": BASE_URL + "/#website",
+                "url": BASE_URL + "/",
+                "name": SITE_NAME,
+            },
+            {
+                "@type": "VisualArtwork",
+                "@id": item["canonical_url"] + "#artwork",
+                "url": item["canonical_url"],
+                "name": item["display_name"],
+                "creator": {"@id": BASE_URL + "/#person"},
+                "image": item["image_url"],
+                "artform": "Drawing",
+                "artMedium": "Fountain pen and ruler on paper",
+                "genre": "Contemporary drawing",
+                "keywords": make_keywords("systematic drawing", "numbered drawings"),
+                "isPartOf": {"@id": BASE_URL + "/#website"},
+            },
+            {
+                "@type": "ImageObject",
+                "@id": item["image_url"] + "#image",
+                "contentUrl": item["image_url"],
+                "url": item["image_url"],
+                "description": item["alt"],
+                "creator": {"@id": BASE_URL + "/#person"},
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": item["canonical_url"] + "#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "drawings",
+                        "item": BASE_URL + "/",
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "archive",
+                        "item": BASE_URL + "/archive.html",
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": item["display_name"],
+                        "item": item["canonical_url"],
+                    },
+                ],
+            },
+        ],
     }
 
-    structured_data_json = json.dumps(
-        structured_data,
-        ensure_ascii=False,
-        indent=2
+
+
+def render_page(item, prev_html, next_html, first_html):
+    image_src = f"../images/{item['image_name']}"
+    meta_description = (
+        f"Contemporary ink drawing {item['display_name']} by Norwegian artist Christian Skagen. "
+        f"Part of a sequential online archive of numbered drawings."
+    )
+
+    head = page_head(
+        title=item["page_title"],
+        description=meta_description,
+        canonical_url=item["canonical_url"],
+        og_image=item["image_url"],
+        structured_data=artwork_structured_data(item),
+        css_path=STYLE_PATH,
     )
 
     if next_html:
         image_block = f'''<div class="image-area" id="swipe-area">
   <a href="{next_html}">
-    <img src="{image_src}" alt="{alt}">
+    <img src="{image_src}" alt="{html_escape(item['alt'])}" loading="eager" decoding="async">
   </a>
 </div>'''
     else:
         image_block = f'''<div class="image-area" id="swipe-area">
-  <img src="{image_src}" alt="{alt}">
+  <img src="{image_src}" alt="{html_escape(item['alt'])}" loading="eager" decoding="async">
 </div>'''
 
     prev_js = f'"{prev_html}"' if prev_html else "null"
@@ -436,44 +600,21 @@ def render_page(item, prev_html, next_html, first_html):
     return f'''<!doctype html>
 <html>
 <head>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>{page_title}</title>
-<meta name="description" content="{meta_description}">
-<link rel="canonical" href="{canonical_url}">
-<script type="application/ld+json">
-{structured_data_json}
-</script>
-
-<link rel="stylesheet" href="{STYLE_PATH}">
-
+{head}
 </head>
-
 <body>
-
 <div class="wrapper">
-
 <h1>
-<a href="{image_src}" target="_blank">
-{visible_title}
-</a>
+<a href="{image_src}" target="_blank">{html_escape(item['visible_title'])}</a>
 </h1>
-
 {image_block}
-
 <div class="prompt-wrap">
 <span class="prompt">&gt;</span>
-<input id="command" type="text" autocomplete="off" spellcheck="false">
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
-
 </div>
-
 <script src="{VIEWER_PATH}"></script>
-
 <script>
-
 setupViewer({{
   nextPage: {next_js},
   prevPage: {prev_js},
@@ -483,61 +624,36 @@ setupViewer({{
   archiveReportPath: "/archive_report.json",
   useArchiveReport: false
 }})
-
 </script>
-
 </body>
 </html>
 '''
 
 
 # ==================================================
-# CLEAN OUTPUT DIRECTORY
+# CLEAN / BUILD
 # ==================================================
-# Removes previously generated drawing pages before
-# rebuilding, so stale pages do not remain.
+
 
 def clean_output_dir():
-
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
     for path in OUTPUT_DIR.iterdir():
-
         if not path.is_file():
             continue
-
         name = path.name
-
         if name == "tegning_latest.html" or re.match(r"^tegning_nr\d+(?:_\d{2})?\.html$", name):
             path.unlink()
 
 
-# ==================================================
-# BUILD
-# ==================================================
-# Main build sequence.
-#
-# Order:
-#   parse images
-#   validate
-#   sort
-#   write reports
-#   write sitemap
-#   write archive page
-#   clean old drawing pages
-#   generate new drawing pages
-#   generate tegning_latest.html
 
 def build():
-
     items, ignored = parse_images()
-
     validate(items)
-
     items = sort_items(items)
 
     write_archive_report(items, ignored)
     write_sitemap(items)
+    write_home_page(items)
     write_archive_page(items)
 
     clean_output_dir()
@@ -545,46 +661,20 @@ def build():
     first_html = items[0]["html_name"]
 
     for i, item in enumerate(items):
-
         prev_html = items[i - 1]["html_name"] if i > 0 else None
         next_html = items[i + 1]["html_name"] if i < len(items) - 1 else None
-
-        html = render_page(
-            item,
-            prev_html,
-            next_html,
-            first_html
-        )
-
-        (OUTPUT_DIR / item["html_name"]).write_text(
-            html,
-            encoding="utf-8"
-        )
+        html = render_page(item, prev_html, next_html, first_html)
+        (OUTPUT_DIR / item["html_name"]).write_text(html, encoding="utf-8")
 
     latest = items[-1]
     latest_prev = items[-2]["html_name"] if len(items) > 1 else None
-
-    latest_html = render_page(
-        latest,
-        latest_prev,
-        None,
-        first_html
-    )
-
-    (OUTPUT_DIR / "tegning_latest.html").write_text(
-        latest_html,
-        encoding="utf-8"
-    )
+    latest_html = render_page(latest, latest_prev, None, first_html)
+    (OUTPUT_DIR / "tegning_latest.html").write_text(latest_html, encoding="utf-8")
 
     print(f"Built {len(items)} pages")
     print(f"First: {items[0]['slug']}")
     print(f"Latest: {items[-1]['slug']}")
 
-
-# ==================================================
-# ENTRY POINT
-# ==================================================
-# Runs the build when the script is executed directly.
 
 if __name__ == "__main__":
     build()
