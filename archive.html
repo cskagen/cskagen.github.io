@@ -1,55 +1,76 @@
 <!doctype html>
 <html>
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>archive – Christian Skagen</title>
-<meta name="description" content="Archive index of numbered drawings by Christian Skagen.">
+<meta name="description" content="Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen.">
+<meta name="keywords" content="Christian Skagen, Norwegian artist, contemporary drawing, ink drawing, conceptual drawing, sequential archive, visual art">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://cskagen.github.io/#person",
+      "name": "Christian Skagen",
+      "url": "https://cskagen.github.io/"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://cskagen.github.io/#website",
+      "url": "https://cskagen.github.io/",
+      "name": "Christian Skagen – drawings",
+      "description": "Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.",
+      "creator": {
+        "@id": "https://cskagen.github.io/#person"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://cskagen.github.io/archive.html#collection",
+      "url": "https://cskagen.github.io/archive.html",
+      "name": "Archive of numbered drawings",
+      "description": "Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen.",
+      "isPartOf": {
+        "@id": "https://cskagen.github.io/#website"
+      },
+      "about": {
+        "@id": "https://cskagen.github.io/#person"
+      }
+    }
+  ]
+}
+</script>
 <link rel="canonical" href="https://cskagen.github.io/archive.html">
-
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Christian Skagen – drawings">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="archive – Christian Skagen">
+<meta property="og:description" content="Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen.">
+<meta property="og:url" content="https://cskagen.github.io/archive.html">
+<meta property="og:image" content="https://cskagen.github.io/images/tegning_nr854.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="archive – Christian Skagen">
+<meta name="twitter:description" content="Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen.">
+<meta name="twitter:image" content="https://cskagen.github.io/images/tegning_nr854.jpg">
 <link rel="stylesheet" href="css/style.css">
-
 <style>
-.archive-list{
-  width:100%;
-  max-width:720px;
-  margin:auto;
-  text-align:left;
-  font-size:16px;
-  line-height:1.6;
-}
-
-.archive-list a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.archive-list a:hover{
-  text-decoration:underline;
-}
-
-@media (max-width:600px){
-  .archive-list{
-    font-size:14px;
-  }
-}
+.archive-list{width:100%;max-width:720px;margin:auto;text-align:left;font-size:16px;line-height:1.6;}
+.archive-list a{color:inherit;text-decoration:none;}
+.archive-list a:hover{text-decoration:underline;}
+.archive-meta{width:100%;max-width:720px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}
+@media (max-width:600px){.archive-list{font-size:14px;}}
 </style>
-
 </head>
-
 <body>
-
 <div class="wrapper">
-
-<h1>
-<a href="/">archive</a>
-</h1>
-
+<h1><a href="/">archive</a></h1>
+<div class="archive-meta">Sequential archive of numbered ink drawings by Christian Skagen. Use the command line below or select a drawing number.</div>
 <div class="image-area" id="swipe-area">
 <div class="archive-list">
-
 <div><a href="drawings/tegning_nr730.html">730</a></div>
 <div><a href="drawings/tegning_nr731.html">731</a></div>
 <div><a href="drawings/tegning_nr732.html">732</a></div>
@@ -149,23 +170,21 @@
 <div><a href="drawings/tegning_nr849_01.html">849_01</a></div>
 <div><a href="drawings/tegning_nr850.html">850</a></div>
 <div><a href="drawings/tegning_nr851.html">851</a></div>
+<div><a href="drawings/tegning_nr851_01.html">851_01</a></div>
 <div><a href="drawings/tegning_nr852.html">852</a></div>
+<div><a href="drawings/tegning_nr852_01.html">852_01</a></div>
 <div><a href="drawings/tegning_nr853.html">853</a></div>
 <div><a href="drawings/tegning_nr853_01.html">853_01</a></div>
+<div><a href="drawings/tegning_nr853_02.html">853_02</a></div>
 <div><a href="drawings/tegning_nr854.html">854</a></div>
-
 </div>
 </div>
-
 <div class="prompt-wrap">
 <span class="prompt">&gt;</span>
-<input id="command" type="text" autocomplete="off" spellcheck="false">
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
-
 </div>
-
 <script src="js/viewer.js"></script>
-
 <script>
 setupViewer({
   nextPage: null,
@@ -177,6 +196,5 @@ setupViewer({
   homePage: "/"
 })
 </script>
-
 </body>
 </html>
