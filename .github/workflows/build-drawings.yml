@@ -40,5 +40,4 @@ jobs:
             exit 0
           fi
           git commit -m "Generate drawing pages"
-          git pull --rebase origin main
           git push origin HEAD:main
