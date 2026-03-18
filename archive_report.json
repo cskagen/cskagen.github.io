@@ -1,13 +1,16 @@
 {
-  "total_items": 102,
-  "base_drawings": 101,
+  "total_items": 105,
+  "base_drawings": 104,
   "attached_images": 1,
-  "first": "tegning_nr730",
+  "first": "tegning_nr726",
   "latest": "tegning_nr854",
   "ignored": [
     "test.txt"
   ],
   "sequence": [
+    "tegning_nr726",
+    "tegning_nr727",
+    "tegning_nr729",
     "tegning_nr730",
     "tegning_nr731",
     "tegning_nr732",

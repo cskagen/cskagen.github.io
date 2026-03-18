@@ -1,17 +1,14 @@
 <!doctype html>
 <html>
 <head>
-
-<meta name="google-site-verification" content="tyE3vdezEKc1F00i3hvjLin892w6CZbKQboJcbj_Azk" />  
-
+<meta name="google-site-verification" content="tyE3vdezEKc1F00i3hvjLin892w6CZbKQboJcbj_Azk">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Christian Skagen – drawings</title>
-<meta name="description" content="Christian Skagen: public sequential archive of numbered drawings.">
-<link rel="canonical" href="https://cskagen.github.io/">
-  
-  <script type="application/ld+json">
+<meta name="description" content="Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.">
+<meta name="keywords" content="Christian Skagen, Norwegian artist, contemporary drawing, ink drawing, conceptual drawing, sequential archive, visual art">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
@@ -26,17 +23,41 @@
       "@id": "https://cskagen.github.io/#website",
       "url": "https://cskagen.github.io/",
       "name": "Christian Skagen – drawings",
-      "description": "Public sequential archive of numbered drawings.",
+      "description": "Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.",
       "creator": {
+        "@id": "https://cskagen.github.io/#person"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://cskagen.github.io/#home",
+      "url": "https://cskagen.github.io/",
+      "name": "Christian Skagen – drawings",
+      "description": "Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.",
+      "isPartOf": {
+        "@id": "https://cskagen.github.io/#website"
+      },
+      "about": {
         "@id": "https://cskagen.github.io/#person"
       }
     }
   ]
 }
 </script>
-  
+<link rel="canonical" href="https://cskagen.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Christian Skagen – drawings">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="Christian Skagen – drawings">
+<meta property="og:description" content="Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.">
+<meta property="og:url" content="https://cskagen.github.io/">
+<meta property="og:image" content="https://cskagen.github.io/images/tegning_nr854.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Christian Skagen – drawings">
+<meta name="twitter:description" content="Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields.">
+<meta name="twitter:image" content="https://cskagen.github.io/images/tegning_nr854.jpg">
 <link rel="stylesheet" href="css/style.css">
-
 <style>
 .index-text{
   width:100%;
@@ -47,27 +68,27 @@
   line-height:1.5;
   white-space:pre-line;
 }
-
+.visually-hidden{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
 @media (max-width:600px){
-  .index-text{
-    font-size:14px;
-  }
+  .index-text{font-size:14px;}
 }
 </style>
-
 </head>
-
 <body>
-
 <div class="wrapper">
-
-<h1>
-<a href="/">drawings</a>
-</h1>
-
+<h1><a href="/">drawings</a></h1>
 <div class="image-area" id="swipe-area">
-<div class="index-text">
-Christian Skagen is a Norwegian visual artist working with drawing as constructed, meditative system.
+<div class="index-text">Christian Skagen is a Norwegian visual artist working with drawing as constructed, meditative system.
 
 This site functions as a public sequential archive of numbered drawings.
 
@@ -87,20 +108,17 @@ random
 latest
 first
 home
+archive
 print
-xxx (enter drawing number)
+xxx (enter drawing number)</div>
 </div>
-</div>
-
+<p class="visually-hidden">Christian Skagen is a Norwegian visual artist working with systematic ink drawing, sequential archives, and constructed meditative image fields. The archive currently spans numbered drawings from tegning nr 726 to tegning nr 854.</p>
 <div class="prompt-wrap">
 <span class="prompt">&gt;</span>
-<input id="command" type="text" autocomplete="off" spellcheck="false">
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
-
 </div>
-
 <script src="js/viewer.js"></script>
-
 <script>
 setupViewer({
   nextPage: null,
@@ -112,6 +130,5 @@ setupViewer({
   homePage: "/"
 })
 </script>
-
 </body>
 </html>
