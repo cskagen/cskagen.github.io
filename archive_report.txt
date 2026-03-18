@@ -1,13 +1,31 @@
-Total items: 132
-Base drawings: 130
+Total items: 150
+Base drawings: 148
 Attached images: 2
-First: tegning_nr698
+First: tegning_nr680
 Latest: tegning_nr854
 
 Warnings:
 Ignored file: test.txt
 
 Sequence:
+tegning_nr680
+tegning_nr681
+tegning_nr682
+tegning_nr683
+tegning_nr684
+tegning_nr685
+tegning_nr686
+tegning_nr687
+tegning_nr688
+tegning_nr689
+tegning_nr690
+tegning_nr691
+tegning_nr692
+tegning_nr693
+tegning_nr694
+tegning_nr695
+tegning_nr696
+tegning_nr697
 tegning_nr698
 tegning_nr701
 tegning_nr702
