@@ -1,3 +1,10 @@
+function goToRandom(archiveSequence) {
+  if (!archiveSequence || archiveSequence.length === 0) return;
+
+  const choice = archiveSequence[Math.floor(Math.random() * archiveSequence.length)];
+  window.location.href = "/drawings/" + choice + ".html";
+}
+
 function goToCommand(value, config) {
 
   const v = value.trim().toLowerCase();
@@ -38,32 +45,25 @@ function goToCommand(value, config) {
     return;
   }
 
- // --------------------------------------------------
-// random command
-// --------------------------------------------------
+  // --------------------------------------------------
+  // random command
+  // --------------------------------------------------
 
-function goToRandom(archiveSequence) {
-  if (!archiveSequence || archiveSequence.length === 0) return;
-
-  const choice = archiveSequence[Math.floor(Math.random() * archiveSequence.length)];
-  window.location.href = "/drawings/" + choice + ".html";
-}
-
-if (v === "random") {
-  goToRandom(archiveSequence);
-  return;
-}
+  if (v === "random") {
+    goToRandom(archiveSequence);
+    return;
+  }
 
   // --------------------------------------------------
   // normal commands
   // --------------------------------------------------
 
   const commands = {
-  latest: latestPage,
-  first: firstPage,
-  archive: "/archive.html",
-  report: "/archive_report.txt"
-};
+    latest: latestPage,
+    first: firstPage,
+    archive: "/archive.html",
+    report: "/archive_report.txt"
+  };
 
   if (commands[v]) {
     window.location.href = commands[v];
@@ -109,68 +109,66 @@ function setupViewer(config) {
     }
 
     // --------------------------------------------------
-// keyboard navigation
-// drawing pages:
-//   right = next
-//   left = prev
-// homepage:
-//   right = latest
-//   left = first
-//   R = random
-// --------------------------------------------------
+    // keyboard navigation
+    // drawing pages:
+    //   right = next
+    //   left = prev
+    // homepage:
+    //   right = latest
+    //   left = first
+    //   R = random
+    // --------------------------------------------------
 
-document.addEventListener("keydown", function (event) {
+    document.addEventListener("keydown", function (event) {
 
-  const activeElement = document.activeElement;
-  const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
-  const typing = activeTag === "input" || activeTag === "textarea";
+      const activeElement = document.activeElement;
+      const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
+      const typing = activeTag === "input" || activeTag === "textarea";
 
-  if (typing) return;
+      if (typing) return;
 
-  if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R"].includes(event.key)) {
-    event.preventDefault();
-  }
+      if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R"].includes(event.key)) {
+        event.preventDefault();
+      }
 
-  if (event.key === "ArrowRight") {
-    if (nextPage) {
-      window.location.href = nextPage;
-    } else if (latestPage) {
-      window.location.href = latestPage;
-    }
-  }
+      if (event.key === "ArrowRight") {
+        if (nextPage) {
+          window.location.href = nextPage;
+        } else if (latestPage) {
+          window.location.href = latestPage;
+        }
+      }
 
-  if (event.key === "ArrowLeft") {
-    if (prevPage) {
-      window.location.href = prevPage;
-    } else if (firstPage) {
-      window.location.href = firstPage;
-    }
-  }
+      if (event.key === "ArrowLeft") {
+        if (prevPage) {
+          window.location.href = prevPage;
+        } else if (firstPage) {
+          window.location.href = firstPage;
+        }
+      }
 
-  if (event.key === "ArrowUp" && latestPage) {
-    window.location.href = latestPage;
-  }
+      if (event.key === "ArrowUp" && latestPage) {
+        window.location.href = latestPage;
+      }
 
-  if (event.key === "ArrowDown" && firstPage) {
-    window.location.href = firstPage;
-  }
+      if (event.key === "ArrowDown" && firstPage) {
+        window.location.href = firstPage;
+      }
 
-  // --------------------------------------------------
-  // random shortcut (R)
-  // --------------------------------------------------
+      // --------------------------------------------------
+      // random shortcut (R)
+      // --------------------------------------------------
 
-  if (event.key === "r" || event.key === "R") {
-    goToRandom(archiveSequence);
-  }
-
-});
+      if (event.key === "r" || event.key === "R") {
+        goToRandom(archiveSequence);
+      }
 
       // --------------------------------------------------
       // open full image
       // only works on drawing pages with an image
       // --------------------------------------------------
 
-      if (event.key === "f") {
+      if (event.key === "f" || event.key === "F") {
         const img = document.querySelector(".image-area img");
 
         if (img) {
