@@ -62,7 +62,7 @@ function goToCommand(value, config) {
     latest: latestPage,
     first: firstPage,
     archive: "/archive.html",
-    report: "/archive_report.txt"
+    report: "/archive_report.html"
   };
 
   if (commands[v]) {

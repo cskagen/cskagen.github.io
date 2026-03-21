@@ -79,10 +79,8 @@ def json_ld(data):
     return json.dumps(data, ensure_ascii=False, indent=2)
 
 
-
 def html_escape(text):
     return escape(text, quote=True)
-
 
 
 def abs_url(path: str) -> str:
@@ -91,7 +89,6 @@ def abs_url(path: str) -> str:
     if not path.startswith("/"):
         path = "/" + path
     return BASE_URL + path
-
 
 
 def make_keywords(*extra):
@@ -103,7 +100,6 @@ def make_keywords(*extra):
             deduped.append(item)
             seen.add(item)
     return ", ".join(deduped)
-
 
 
 def page_head(*, title, description, canonical_url, og_image=None, structured_data=None, css_path="css/style.css"):
@@ -135,7 +131,6 @@ def page_head(*, title, description, canonical_url, og_image=None, structured_da
             '<script type="application/ld+json">\n' + json_ld(structured_data) + '\n</script>'
         )
     return "\n".join(parts)
-
 
 
 def website_graph(extra_nodes=None):
@@ -258,7 +253,6 @@ def validate(items):
             )
 
 
-
 def sort_items(items):
     return sorted(items, key=lambda x: (x["base"], x["sub"]))
 
@@ -308,6 +302,86 @@ def write_archive_report(items, ignored):
     Path("archive_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
 
 
+def write_archive_report_page(items, ignored):
+    total = len(items)
+    base_drawings = sum(1 for x in items if x["sub"] == 0)
+    attached = total - base_drawings
+
+    first = items[0]["slug"]
+    latest = items[-1]["slug"]
+
+    report_entries = [
+        f"Total items: {total}",
+        f"Base drawings: {base_drawings}",
+        f"Attached images: {attached}",
+        f"First: {first}",
+        f"Latest: {latest}",
+        "",
+        "Warnings:",
+    ]
+
+    if ignored:
+        report_entries.extend(f"Ignored file: {name}" for name in ignored)
+    else:
+        report_entries.append("None")
+
+    report_entries.extend(["", "Sequence:"])
+    report_entries.extend(item["slug"] for item in items)
+
+    lines = [
+        "<!doctype html>",
+        "<html>",
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        "<title>archive report – Christian Skagen</title>",
+        '<link rel="stylesheet" href="css/style.css">',
+        "<style>",
+        ".report-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px;font-size:12px;line-height:1.35;font-family:Courier New, Courier, monospace;}",
+        ".report-item{min-width:0;word-break:break-word;white-space:pre-wrap;}",
+        ".report-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
+        "@media (max-width:1200px){.report-grid{grid-template-columns:repeat(3,1fr);}}",
+        "@media (max-width:900px){.report-grid{grid-template-columns:repeat(2,1fr);}}",
+        "@media (max-width:600px){.report-grid{grid-template-columns:1fr;font-size:11px;}}",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="wrapper">',
+        '<h1><a href="/">archive report</a></h1>',
+        '<div class="report-meta">Archive report generated from the current image sequence.</div>',
+        '<div class="image-area" id="swipe-area">',
+        '<div class="report-grid">',
+    ]
+
+    for entry in report_entries:
+        lines.append(f'<div class="report-item">{html_escape(entry)}</div>')
+
+    lines.extend([
+        "</div>",
+        "</div>",
+        '<div class="prompt-wrap">',
+        '<span class="prompt">&gt;</span>',
+        '<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">',
+        "</div>",
+        "</div>",
+        '<script src="js/viewer.js"></script>',
+        "<script>",
+        "setupViewer({",
+        "  nextPage: null,",
+        "  prevPage: null,",
+        "  latestPage: null,",
+        "  firstPage: null,",
+        "  useArchiveReport: true,",
+        "  archiveReportPath: \"/archive_report.json\",",
+        "  homePage: \"/\"",
+        "})",
+        "</script>",
+        "</body>",
+        "</html>",
+    ])
+
+    Path("archive_report.html").write_text("\n".join(lines), encoding="utf-8")
+
 
 def write_sitemap(items):
     lines = [
@@ -318,6 +392,9 @@ def write_sitemap(items):
         "  </url>",
         "  <url>",
         f"    <loc>{BASE_URL}/archive.html</loc>",
+        "  </url>",
+        "  <url>",
+        f"    <loc>{BASE_URL}/archive_report.html</loc>",
         "  </url>",
     ]
 
@@ -423,7 +500,6 @@ setupViewer({{
     Path("index.html").write_text(html, encoding="utf-8")
 
 
-
 def write_archive_page(items):
     latest_item = items[-1]
     structured = website_graph([
@@ -453,13 +529,14 @@ def write_archive_page(items):
         "<head>",
         head,
         "<style>",
-        ".archive-grid{width:100%;max-width:900px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px;font-size:14px;line-height:1.4;}",
+        ".archive-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(9,1fr);gap:4px 12px;font-size:13px;line-height:1.35;}",
         ".archive-grid a{color:inherit;text-decoration:none;}",
         ".archive-grid a:hover{text-decoration:underline;}",
-        ".archive-meta{width:100%;max-width:900px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
+        ".archive-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
         ".archive-item{min-width:0;word-break:break-word;}",
-        "@media (max-width:900px){.archive-grid{grid-template-columns:repeat(2,1fr);}}",
-        "@media (max-width:600px){.archive-grid{grid-template-columns:1fr;font-size:13px;}}",
+        "@media (max-width:1200px){.archive-grid{grid-template-columns:repeat(6,1fr);}}",
+        "@media (max-width:900px){.archive-grid{grid-template-columns:repeat(3,1fr);}}",
+        "@media (max-width:600px){.archive-grid{grid-template-columns:repeat(2,1fr);font-size:12px;}}",
         "</style>",
         "</head>",
         "<body>",
@@ -500,7 +577,6 @@ def write_archive_page(items):
     ])
 
     Path("archive.html").write_text("\n".join(lines), encoding="utf-8")
-
 
 
 def artwork_structured_data(item):
@@ -566,7 +642,6 @@ def artwork_structured_data(item):
             },
         ],
     }
-
 
 
 def render_page(item, prev_html, next_html, first_html):
@@ -647,13 +722,13 @@ def clean_output_dir():
             path.unlink()
 
 
-
 def build():
     items, ignored = parse_images()
     validate(items)
     items = sort_items(items)
 
     write_archive_report(items, ignored)
+    write_archive_report_page(items, ignored)
     write_sitemap(items)
     write_home_page(items)
     write_archive_page(items)
