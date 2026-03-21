@@ -127,7 +127,11 @@ function setupViewer(config) {
 
       if (typing) return;
 
-      if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R"].includes(event.key)) {
+      // let browser/system shortcuts pass through
+      // examples: Cmd+R, Ctrl+R, Cmd+P, Cmd+F
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+      if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F"].includes(event.key)) {
         event.preventDefault();
       }
 
