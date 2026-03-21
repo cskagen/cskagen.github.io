@@ -326,6 +326,7 @@ def write_archive_report_page(items, ignored):
         summary_entries.append("None")
 
     sequence_entries = [item["slug"] for item in items]
+    summary_text = "\n".join(summary_entries)
 
     lines = [
         "<!doctype html>",
@@ -351,7 +352,7 @@ def write_archive_report_page(items, ignored):
         '<h1><a href="/">archive report</a></h1>',
         '<div class="image-area" id="swipe-area">',
         '<div class="report-wrap">',
-        f'<div class="report-meta">{html_escape("\\n".join(summary_entries))}</div>',
+        f'<div class="report-meta">{html_escape(summary_text)}</div>',
         '<div class="report-sequence-label">Sequence:</div>',
         '<div class="report-grid">',
     ]
