@@ -6,9 +6,11 @@
 <title>archive report – Christian Skagen</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
+.report-wrap{width:100%;max-width:1400px;margin:auto;}
+.report-meta{width:100%;max-width:720px;margin:0 0 16px 0;text-align:left;font-size:14px;line-height:1.5;font-family:Courier New, Courier, monospace;white-space:pre-wrap;}
+.report-sequence-label{width:100%;max-width:1400px;margin:0 auto 8px auto;text-align:left;font-size:14px;line-height:1.5;font-family:Courier New, Courier, monospace;}
 .report-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px;font-size:12px;line-height:1.35;font-family:Courier New, Courier, monospace;}
 .report-item{min-width:0;word-break:break-word;white-space:pre-wrap;}
-.report-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}
 @media (max-width:1200px){.report-grid{grid-template-columns:repeat(3,1fr);}}
 @media (max-width:900px){.report-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:600px){.report-grid{grid-template-columns:1fr;font-size:11px;}}
@@ -17,19 +19,11 @@
 <body>
 <div class="wrapper">
 <h1><a href="/">archive report</a></h1>
-<div class="report-meta">Archive report generated from the current image sequence.</div>
 <div class="image-area" id="swipe-area">
+<div class="report-wrap">
+<div class="report-meta">Total items: 225\nBase drawings: 223\nAttached images: 2\nFirst: tegning_nr600\nLatest: tegning_nr854\n\nWarnings:\nIgnored file: test.txt</div>
+<div class="report-sequence-label">Sequence:</div>
 <div class="report-grid">
-<div class="report-item">Total items: 225</div>
-<div class="report-item">Base drawings: 223</div>
-<div class="report-item">Attached images: 2</div>
-<div class="report-item">First: tegning_nr600</div>
-<div class="report-item">Latest: tegning_nr854</div>
-<div class="report-item"></div>
-<div class="report-item">Warnings:</div>
-<div class="report-item">Ignored file: test.txt</div>
-<div class="report-item"></div>
-<div class="report-item">Sequence:</div>
 <div class="report-item">tegning_nr600</div>
 <div class="report-item">tegning_nr601</div>
 <div class="report-item">tegning_nr603</div>
@@ -255,6 +249,7 @@
 <div class="report-item">tegning_nr853</div>
 <div class="report-item">tegning_nr853_01</div>
 <div class="report-item">tegning_nr854</div>
+</div>
 </div>
 </div>
 <div class="prompt-wrap">

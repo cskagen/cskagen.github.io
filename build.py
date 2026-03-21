@@ -310,7 +310,7 @@ def write_archive_report_page(items, ignored):
     first = items[0]["slug"]
     latest = items[-1]["slug"]
 
-    report_entries = [
+    summary_entries = [
         f"Total items: {total}",
         f"Base drawings: {base_drawings}",
         f"Attached images: {attached}",
@@ -321,12 +321,11 @@ def write_archive_report_page(items, ignored):
     ]
 
     if ignored:
-        report_entries.extend(f"Ignored file: {name}" for name in ignored)
+        summary_entries.extend(f"Ignored file: {name}" for name in ignored)
     else:
-        report_entries.append("None")
+        summary_entries.append("None")
 
-    report_entries.extend(["", "Sequence:"])
-    report_entries.extend(item["slug"] for item in items)
+    sequence_entries = [item["slug"] for item in items]
 
     lines = [
         "<!doctype html>",
@@ -337,9 +336,11 @@ def write_archive_report_page(items, ignored):
         "<title>archive report – Christian Skagen</title>",
         '<link rel="stylesheet" href="css/style.css">',
         "<style>",
+        ".report-wrap{width:100%;max-width:1400px;margin:auto;}",
+        ".report-meta{width:100%;max-width:720px;margin:0 0 16px 0;text-align:left;font-size:14px;line-height:1.5;font-family:Courier New, Courier, monospace;white-space:pre-wrap;}",
+        ".report-sequence-label{width:100%;max-width:1400px;margin:0 auto 8px auto;text-align:left;font-size:14px;line-height:1.5;font-family:Courier New, Courier, monospace;}",
         ".report-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px;font-size:12px;line-height:1.35;font-family:Courier New, Courier, monospace;}",
         ".report-item{min-width:0;word-break:break-word;white-space:pre-wrap;}",
-        ".report-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
         "@media (max-width:1200px){.report-grid{grid-template-columns:repeat(3,1fr);}}",
         "@media (max-width:900px){.report-grid{grid-template-columns:repeat(2,1fr);}}",
         "@media (max-width:600px){.report-grid{grid-template-columns:1fr;font-size:11px;}}",
@@ -348,15 +349,18 @@ def write_archive_report_page(items, ignored):
         "<body>",
         '<div class="wrapper">',
         '<h1><a href="/">archive report</a></h1>',
-        '<div class="report-meta">Archive report generated from the current image sequence.</div>',
         '<div class="image-area" id="swipe-area">',
+        '<div class="report-wrap">',
+        f'<div class="report-meta">{html_escape("\\n".join(summary_entries))}</div>',
+        '<div class="report-sequence-label">Sequence:</div>',
         '<div class="report-grid">',
     ]
 
-    for entry in report_entries:
+    for entry in sequence_entries:
         lines.append(f'<div class="report-item">{html_escape(entry)}</div>')
 
     lines.extend([
+        "</div>",
         "</div>",
         "</div>",
         '<div class="prompt-wrap">',
