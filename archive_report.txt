@@ -1,13 +1,59 @@
-Total items: 179
-Base drawings: 177
+Total items: 225
+Base drawings: 223
 Attached images: 2
-First: tegning_nr650
+First: tegning_nr600
 Latest: tegning_nr854
 
 Warnings:
 Ignored file: test.txt
 
 Sequence:
+tegning_nr600
+tegning_nr601
+tegning_nr603
+tegning_nr604
+tegning_nr605
+tegning_nr606
+tegning_nr607
+tegning_nr609
+tegning_nr610
+tegning_nr611
+tegning_nr612
+tegning_nr613
+tegning_nr614
+tegning_nr615
+tegning_nr616
+tegning_nr617
+tegning_nr618
+tegning_nr619
+tegning_nr620
+tegning_nr621
+tegning_nr622
+tegning_nr623
+tegning_nr624
+tegning_nr625
+tegning_nr626
+tegning_nr627
+tegning_nr628
+tegning_nr629
+tegning_nr630
+tegning_nr632
+tegning_nr633
+tegning_nr634
+tegning_nr635
+tegning_nr636
+tegning_nr637
+tegning_nr638
+tegning_nr639
+tegning_nr640
+tegning_nr642
+tegning_nr643
+tegning_nr644
+tegning_nr645
+tegning_nr646
+tegning_nr647
+tegning_nr648
+tegning_nr649
 tegning_nr650
 tegning_nr651
 tegning_nr652
