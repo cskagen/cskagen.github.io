@@ -453,11 +453,13 @@ def write_archive_page(items):
         "<head>",
         head,
         "<style>",
-        ".archive-list{width:100%;max-width:720px;margin:auto;text-align:left;font-size:16px;line-height:1.6;}",
-        ".archive-list a{color:inherit;text-decoration:none;}",
-        ".archive-list a:hover{text-decoration:underline;}",
-        ".archive-meta{width:100%;max-width:720px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
-        "@media (max-width:600px){.archive-list{font-size:14px;}}",
+        ".archive-grid{width:100%;max-width:900px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px;font-size:14px;line-height:1.4;}",
+        ".archive-grid a{color:inherit;text-decoration:none;}",
+        ".archive-grid a:hover{text-decoration:underline;}",
+        ".archive-meta{width:100%;max-width:900px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
+        ".archive-item{min-width:0;word-break:break-word;}",
+        "@media (max-width:900px){.archive-grid{grid-template-columns:repeat(2,1fr);}}",
+        "@media (max-width:600px){.archive-grid{grid-template-columns:1fr;font-size:13px;}}",
         "</style>",
         "</head>",
         "<body>",
@@ -465,13 +467,13 @@ def write_archive_page(items):
         '<h1><a href="/">archive</a></h1>',
         f'<div class="archive-meta">{html_escape(ARCHIVE_INTRO)}</div>',
         '<div class="image-area" id="swipe-area">',
-        '<div class="archive-list">',
+        '<div class="archive-grid">',
     ]
 
     for item in items:
         label = str(item["base"]) if item["sub"] == 0 else f'{item["base"]}_{item["sub"]:02d}'
         href = f'drawings/{item["html_name"]}'
-        lines.append(f'<div><a href="{href}">{label}</a></div>')
+        lines.append(f'<div class="archive-item"><a href="{href}">{label}</a></div>')
 
     lines.extend([
         "</div>",
