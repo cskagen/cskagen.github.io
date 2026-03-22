@@ -1,8 +1,8 @@
-Total items: 226
+Total items: 227
 Base drawings: 223
-Attached images: 3
+Attached images: 4
 First: tegning_nr600
-Latest: tegning_nr854_01
+Latest: tegning_nr854_02
 
 Warnings:
 Ignored file: .DS_Store
@@ -235,3 +235,4 @@ tegning_nr853
 tegning_nr853_01
 tegning_nr854
 tegning_nr854_01
+tegning_nr854_02

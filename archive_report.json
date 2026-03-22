@@ -1,9 +1,9 @@
 {
-  "total_items": 226,
+  "total_items": 227,
   "base_drawings": 223,
-  "attached_images": 3,
+  "attached_images": 4,
   "first": "tegning_nr600",
-  "latest": "tegning_nr854_01",
+  "latest": "tegning_nr854_02",
   "ignored": [
     ".DS_Store",
     "test.txt"
@@ -234,6 +234,7 @@
     "tegning_nr853",
     "tegning_nr853_01",
     "tegning_nr854",
-    "tegning_nr854_01"
+    "tegning_nr854_01",
+    "tegning_nr854_02"
   ]
 }
