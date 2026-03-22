@@ -304,9 +304,6 @@
     <loc>https://cskagen.github.io/drawings/tegning_nr704.html</loc>
   </url>
   <url>
-    <loc>https://cskagen.github.io/drawings/tegning_nr704_01.html</loc>
-  </url>
-  <url>
     <loc>https://cskagen.github.io/drawings/tegning_nr705.html</loc>
   </url>
   <url>
@@ -676,6 +673,9 @@
     <loc>https://cskagen.github.io/drawings/tegning_nr852.html</loc>
   </url>
   <url>
+    <loc>https://cskagen.github.io/drawings/tegning_nr852_01.html</loc>
+  </url>
+  <url>
     <loc>https://cskagen.github.io/drawings/tegning_nr853.html</loc>
   </url>
   <url>
@@ -683,5 +683,8 @@
   </url>
   <url>
     <loc>https://cskagen.github.io/drawings/tegning_nr854.html</loc>
+  </url>
+  <url>
+    <loc>https://cskagen.github.io/drawings/tegning_nr854_01.html</loc>
   </url>
 </urlset>
