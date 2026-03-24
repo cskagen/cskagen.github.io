@@ -1,6 +1,6 @@
-Total items: 234
+Total items: 239
 Base drawings: 223
-Attached images: 11
+Attached images: 16
 First: tegning_nr600
 Latest: tegning_nr854_01
 
@@ -208,6 +208,7 @@ tegning_nr825
 tegning_nr826
 tegning_nr827
 tegning_nr828
+tegning_nr828_01
 tegning_nr829
 tegning_nr830
 tegning_nr831
@@ -215,9 +216,13 @@ tegning_nr832
 tegning_nr833
 tegning_nr834
 tegning_nr837
+tegning_nr837_01
 tegning_nr838
+tegning_nr838_01
 tegning_nr839
+tegning_nr839_01
 tegning_nr840
+tegning_nr840_01
 tegning_nr841
 tegning_nr841_01
 tegning_nr842
