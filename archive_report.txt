@@ -1,8 +1,8 @@
-Total items: 239
+Total items: 223
 Base drawings: 223
-Attached images: 16
+Attached images: 0
 First: tegning_nr600
-Latest: tegning_nr854_01
+Latest: tegning_nr854
 
 Warnings:
 Ignored file: .DS_Store
@@ -208,7 +208,6 @@ tegning_nr825
 tegning_nr826
 tegning_nr827
 tegning_nr828
-tegning_nr828_01
 tegning_nr829
 tegning_nr830
 tegning_nr831
@@ -216,35 +215,20 @@ tegning_nr832
 tegning_nr833
 tegning_nr834
 tegning_nr837
-tegning_nr837_01
 tegning_nr838
-tegning_nr838_01
 tegning_nr839
-tegning_nr839_01
 tegning_nr840
-tegning_nr840_01
 tegning_nr841
-tegning_nr841_01
 tegning_nr842
-tegning_nr842_01
 tegning_nr843
-tegning_nr843_01
 tegning_nr844
-tegning_nr844_01
 tegning_nr845
-tegning_nr845_01
 tegning_nr846
-tegning_nr846_01
 tegning_nr847
-tegning_nr847_01
 tegning_nr848
 tegning_nr849
 tegning_nr850
 tegning_nr851
-tegning_nr851_01
 tegning_nr852
-tegning_nr852_01
 tegning_nr853
-tegning_nr853_01
 tegning_nr854
-tegning_nr854_01

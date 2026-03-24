@@ -19,7 +19,6 @@ PERSON_NAME = "Christian Skagen"
 DEFAULT_LOCALE = "en"
 
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
-SUB_RE = re.compile(r"^tegning_nr(\d+)_(\d{2})\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
 HOME_DESCRIPTION = (
@@ -167,7 +166,7 @@ def parse_images():
 
     items = []
     ignored = []
-    seen_positions = set()
+    seen_bases = set()
 
     for path in sorted(IMAGE_DIR.iterdir()):
         if not path.is_file():
@@ -175,34 +174,22 @@ def parse_images():
 
         name = path.name
         m_main = MAIN_RE.match(name)
-        m_sub = SUB_RE.match(name)
 
-        if m_main:
-            base = int(m_main.group(1))
-            sub = 0
-            slug = f"tegning_nr{base}"
-            visible_title = slug
-            display_name = f"tegning nr {base}"
-            page_title = f"tegning nr {base} – Christian Skagen"
-            alt = f"Ink drawing nr {base} by Christian Skagen"
-
-        elif m_sub:
-            base = int(m_sub.group(1))
-            sub = int(m_sub.group(2))
-            slug = f"tegning_nr{base}_{sub:02d}"
-            visible_title = slug
-            display_name = f"tegning nr {base}, image {sub:02d}"
-            page_title = f"tegning nr {base}, image {sub:02d} – Christian Skagen"
-            alt = f"Ink drawing nr {base}, image {sub:02d}, by Christian Skagen"
-
-        else:
+        if not m_main:
             ignored.append(name)
             continue
 
-        key = (base, sub)
-        if key in seen_positions:
-            raise SystemExit(f"ERROR: Duplicate sequence position for {name}")
-        seen_positions.add(key)
+        base = int(m_main.group(1))
+
+        if base in seen_bases:
+            raise SystemExit(f"ERROR: Duplicate base drawing for {name}")
+        seen_bases.add(base)
+
+        slug = f"tegning_nr{base}"
+        visible_title = slug
+        display_name = f"tegning nr {base}"
+        page_title = f"tegning nr {base} – Christian Skagen"
+        alt = f"Ink drawing nr {base} by Christian Skagen"
 
         image_url = f"{BASE_URL}/images/{name}"
         canonical_url = f"{BASE_URL}/drawings/{slug}.html"
@@ -210,7 +197,6 @@ def parse_images():
         items.append({
             "image_name": name,
             "base": base,
-            "sub": sub,
             "slug": slug,
             "page_title": page_title,
             "visible_title": visible_title,
@@ -233,28 +219,17 @@ def parse_images():
 
 
 def validate(items):
-    groups = {}
+    seen_bases = set()
+
     for item in items:
-        groups.setdefault(item["base"], []).append(item["sub"])
-
-    for base, subs in groups.items():
-        subs = sorted(subs)
-        if 0 not in subs:
-            raise SystemExit(
-                f"ERROR: tegning_nr{base}_01 exists but tegning_nr{base}.jpg is missing"
-            )
-
-        expected = list(range(0, max(subs) + 1))
-        if subs != expected:
-            missing = sorted(set(expected) - set(subs))
-            raise SystemExit(
-                f"ERROR: Missing subordinate image(s) for tegning_nr{base}: "
-                + ", ".join(f"_{m:02d}" for m in missing if m != 0)
-            )
+        base = item["base"]
+        if base in seen_bases:
+            raise SystemExit(f"ERROR: Duplicate base drawing number: tegning_nr{base}")
+        seen_bases.add(base)
 
 
 def sort_items(items):
-    return sorted(items, key=lambda x: (x["base"], x["sub"]))
+    return sorted(items, key=lambda x: x["base"])
 
 
 # ==================================================
@@ -264,8 +239,8 @@ def sort_items(items):
 
 def write_archive_report(items, ignored):
     total = len(items)
-    base_drawings = sum(1 for x in items if x["sub"] == 0)
-    attached = total - base_drawings
+    base_drawings = len(items)
+    attached = 0
 
     first = items[0]["slug"]
     latest = items[-1]["slug"]
@@ -304,8 +279,8 @@ def write_archive_report(items, ignored):
 
 def write_archive_report_page(items, ignored):
     total = len(items)
-    base_drawings = sum(1 for x in items if x["sub"] == 0)
-    attached = total - base_drawings
+    base_drawings = len(items)
+    attached = 0
 
     first = items[0]["slug"]
     latest = items[-1]["slug"]
@@ -553,7 +528,7 @@ def write_archive_page(items):
     ]
 
     for item in items:
-        label = str(item["base"]) if item["sub"] == 0 else f'{item["base"]}_{item["sub"]:02d}'
+        label = str(item["base"])
         href = f'drawings/{item["html_name"]}'
         lines.append(f'<div class="archive-item"><a href="{href}">{label}</a></div>')
 
@@ -723,7 +698,7 @@ def clean_output_dir():
         if not path.is_file():
             continue
         name = path.name
-        if name == "tegning_latest.html" or re.match(r"^tegning_nr\d+(?:_\d{2})?\.html$", name):
+        if name == "tegning_latest.html" or re.match(r"^tegning_nr\d+\.html$", name):
             path.unlink()
 
 
