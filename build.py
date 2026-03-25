@@ -14,7 +14,7 @@ STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
 
 BASE_URL = "https://cskagen.github.io"
-IMAGE_BASE_URL = "https://cskagen.no/images"
+IMAGE_BASE_URL = "https://images.cskagen.no/images"
 SITE_NAME = "Christian Skagen – drawings"
 PERSON_NAME = "Christian Skagen"
 DEFAULT_LOCALE = "en"
