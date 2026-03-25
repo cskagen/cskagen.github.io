@@ -14,7 +14,6 @@ STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
 
 BASE_URL = "https://cskagen.github.io"
-IMAGE_BASE_URL = "https://cskagen.no/images"
 SITE_NAME = "Christian Skagen – drawings"
 PERSON_NAME = "Christian Skagen"
 DEFAULT_LOCALE = "en"
@@ -192,7 +191,7 @@ def parse_images():
         page_title = f"tegning nr {base} – Christian Skagen"
         alt = f"Ink drawing nr {base} by Christian Skagen"
 
-        image_url = f"{IMAGE_BASE_URL}/{name}"
+        image_url = f"{BASE_URL}/images/{name}"
         canonical_url = f"{BASE_URL}/drawings/{slug}.html"
 
         items.append({
@@ -626,7 +625,7 @@ def artwork_structured_data(item):
 
 
 def render_page(item, prev_html, next_html, first_html):
-    image_src = f"{IMAGE_BASE_URL}/{item['image_name']}"
+    image_src = f"../images/{item['image_name']}"
     meta_description = (
         f"Contemporary ink drawing {item['display_name']} by Norwegian artist Christian Skagen. "
         f"Part of a sequential online archive of numbered drawings."
