@@ -5,7 +5,6 @@
   "first": "tegning_nr600",
   "latest": "tegning_nr854",
   "ignored": [
-    ".DS_Store",
     "test.txt"
   ],
   "sequence": [
