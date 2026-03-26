@@ -639,9 +639,9 @@ def artwork_structured_data(item):
 def render_page(item, prev_html, next_html, first_html):
     image_src = f"{IMAGE_BASE_URL}/{item['image_name']}"
     meta_description = (
-        f"Contemporary ink drawing {item['display_name']} by Norwegian artist Christian Skagen. "
-        f"Part of a sequential online archive of numbered drawings."
-    )
+    f"Drawing nr {item['base']}. "
+    "A linear field constructed through layered parallel line systems in ink."
+)
 
     head = page_head(
         title=item["page_title"],
