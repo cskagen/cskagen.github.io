@@ -7,7 +7,7 @@ from html import escape
 # CONFIG
 # ==================================================
 
-IMAGE_DIR = Path("images")
+IMAGE_DIR = Path("/Users/christianskagen/Documents/drawings")
 OUTPUT_DIR = Path("drawings")
 
 STYLE_PATH = "../css/style.css"
