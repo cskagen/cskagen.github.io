@@ -4,9 +4,7 @@
   "attached_images": 0,
   "first": "tegning_nr537",
   "latest": "tegning_nr854",
-  "ignored": [
-    ".DS_Store"
-  ],
+  "ignored": [],
   "sequence": [
     "tegning_nr537",
     "tegning_nr538",

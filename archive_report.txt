@@ -5,7 +5,7 @@ First: tegning_nr537
 Latest: tegning_nr854
 
 Warnings:
-Ignored file: .DS_Store
+None
 
 Sequence:
 tegning_nr537
