@@ -7,15 +7,25 @@ from html import escape
 # CONFIG
 # ==================================================
 
-IMAGE_DIR = Path("/Volumes/kilometers/cskagen_github/drawings")
-OUTPUT_DIR = Path("drawings")
+# ==================================================
+# IMAGE SOURCE (LOCAL vs CI)
+# ==================================================
+
+LOCAL_IMAGE_DIR = Path("/Volumes/kilometers/cskagen_github/drawings")
+CI_IMAGE_DIR = Path("images")  # fallback for CI
+
+if LOCAL_IMAGE_DIR.exists():
+    IMAGE_DIR = LOCAL_IMAGE_DIR
+else:
+    IMAGE_DIR = CI_IMAGE_DIR
 
 if not IMAGE_DIR.exists():
     raise FileNotFoundError(
         f"Image directory not found.\n"
-        f"Expected: {IMAGE_DIR}\n"
-        f"Is the external drive mounted?"
+        f"Tried: {LOCAL_IMAGE_DIR} and {CI_IMAGE_DIR}"
     )
+
+OUTPUT_DIR = Path("drawings")
 
 STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
