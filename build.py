@@ -30,12 +30,15 @@ MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
 HOME_DESCRIPTION = (
-    "Christian Skagen is a Norwegian visual artist working with systematic ink drawing, "
-    "sequential archives, and constructed meditative image fields."
+    "Christian Skagen is a Norwegian visual artist working with systematic ink drawing and sequential archives. "
+    "The drawings are constructed as linear fields through layered parallel line systems, "
+    "accumulating measurable distance — often reaching kilometers of total line length — "
+    "built from repeated signals (individual lines)."
 )
 ARCHIVE_TITLE = "archive – Christian Skagen"
 ARCHIVE_DESCRIPTION = (
-    "Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen."
+    "Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen, "
+    "constructed as layered parallel line systems forming linear fields."
 )
 GLOBAL_KEYWORDS = [
     "Christian Skagen",
@@ -43,6 +46,9 @@ GLOBAL_KEYWORDS = [
     "contemporary drawing",
     "ink drawing",
     "conceptual drawing",
+    "layered line drawing",
+    "parallel line drawing",
+    "linear field drawing",
     "sequential archive",
     "visual art",
 ]
