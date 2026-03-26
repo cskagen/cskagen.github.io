@@ -7,8 +7,15 @@ from html import escape
 # CONFIG
 # ==================================================
 
-IMAGE_DIR = Path("/Users/christianskagen/Documents/drawings")
+IMAGE_DIR = Path("/Volumes/kilometers/cskagen_github/drawings")
 OUTPUT_DIR = Path("drawings")
+
+if not IMAGE_DIR.exists():
+    raise FileNotFoundError(
+        f"Image directory not found.\n"
+        f"Expected: {IMAGE_DIR}\n"
+        f"Is the external drive mounted?"
+    )
 
 STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
@@ -311,6 +318,7 @@ def write_archive_report_page(items, ignored):
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>archive report – Christian Skagen</title>",
+        '<meta name="robots" content="noindex,nofollow,noarchive">',
         '<link rel="stylesheet" href="css/style.css">',
         "<style>",
         ".report-wrap{width:100%;max-width:1400px;margin:auto;}",
@@ -373,9 +381,6 @@ def write_sitemap(items):
         "  </url>",
         "  <url>",
         f"    <loc>{BASE_URL}/archive.html</loc>",
-        "  </url>",
-        "  <url>",
-        f"    <loc>{BASE_URL}/archive_report.html</loc>",
         "  </url>",
     ]
 
