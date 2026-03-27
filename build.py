@@ -89,7 +89,7 @@ print
 xxx (enter drawing number)"""
 
 ARCHIVE_INTRO = (
-    "Selection numbered ink drawings by Christian Skagen. "
+    "Selected numbered ink drawings by Christian Skagen. "
     "Use the command line below or select a drawing number."
 )
 
