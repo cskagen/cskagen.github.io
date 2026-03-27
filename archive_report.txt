@@ -1,5 +1,5 @@
-Total items: 281
-Base drawings: 281
+Total items: 246
+Base drawings: 246
 Attached images: 0
 First: tegning_nr537
 Latest: tegning_nr854
@@ -20,16 +20,8 @@ tegning_nr546
 tegning_nr547
 tegning_nr548
 tegning_nr549
-tegning_nr551
-tegning_nr552
 tegning_nr553
 tegning_nr554
-tegning_nr555
-tegning_nr556
-tegning_nr557
-tegning_nr558
-tegning_nr559
-tegning_nr560
 tegning_nr562
 tegning_nr563
 tegning_nr565
@@ -67,11 +59,6 @@ tegning_nr597
 tegning_nr598
 tegning_nr599
 tegning_nr600
-tegning_nr601
-tegning_nr603
-tegning_nr604
-tegning_nr605
-tegning_nr606
 tegning_nr607
 tegning_nr609
 tegning_nr610
@@ -80,7 +67,6 @@ tegning_nr612
 tegning_nr613
 tegning_nr614
 tegning_nr615
-tegning_nr616
 tegning_nr617
 tegning_nr618
 tegning_nr619
@@ -101,12 +87,9 @@ tegning_nr634
 tegning_nr635
 tegning_nr636
 tegning_nr637
-tegning_nr638
-tegning_nr639
 tegning_nr640
 tegning_nr642
 tegning_nr643
-tegning_nr644
 tegning_nr645
 tegning_nr646
 tegning_nr647
@@ -118,7 +101,6 @@ tegning_nr652
 tegning_nr653
 tegning_nr654
 tegning_nr655
-tegning_nr657
 tegning_nr658
 tegning_nr659
 tegning_nr660
@@ -143,20 +125,16 @@ tegning_nr678
 tegning_nr679
 tegning_nr680
 tegning_nr681
-tegning_nr682
 tegning_nr683
 tegning_nr684
-tegning_nr685
 tegning_nr686
 tegning_nr687
 tegning_nr688
-tegning_nr689
 tegning_nr690
 tegning_nr691
 tegning_nr692
 tegning_nr693
 tegning_nr694
-tegning_nr695
 tegning_nr696
 tegning_nr697
 tegning_nr698
@@ -182,7 +160,6 @@ tegning_nr719
 tegning_nr720
 tegning_nr721
 tegning_nr722
-tegning_nr723
 tegning_nr724
 tegning_nr725
 tegning_nr726
@@ -200,14 +177,12 @@ tegning_nr743
 tegning_nr744
 tegning_nr745
 tegning_nr746
-tegning_nr747
 tegning_nr748
 tegning_nr749
 tegning_nr750
 tegning_nr751
 tegning_nr753
 tegning_nr754
-tegning_nr755
 tegning_nr759
 tegning_nr760
 tegning_nr761
@@ -226,7 +201,6 @@ tegning_nr773
 tegning_nr774
 tegning_nr775
 tegning_nr776
-tegning_nr777
 tegning_nr778
 tegning_nr780
 tegning_nr781
@@ -256,17 +230,13 @@ tegning_nr813
 tegning_nr815
 tegning_nr817
 tegning_nr819
-tegning_nr820
-tegning_nr821
 tegning_nr822
 tegning_nr823
 tegning_nr824
-tegning_nr825
 tegning_nr826
 tegning_nr827
 tegning_nr828
 tegning_nr829
-tegning_nr830
 tegning_nr831
 tegning_nr832
 tegning_nr833
@@ -280,11 +250,6 @@ tegning_nr842
 tegning_nr843
 tegning_nr844
 tegning_nr845
-tegning_nr846
-tegning_nr847
-tegning_nr848
-tegning_nr849
-tegning_nr850
 tegning_nr851
 tegning_nr852
 tegning_nr853
