@@ -617,6 +617,9 @@ def artwork_structured_data(item):
                 "url": item["image_url"],
                 "description": item["alt"],
                 "creator": {"@id": BASE_URL + "/#person"},
+
+                "creditText": "Christian Skagen",
+                "copyrightNotice": "© Christian Skagen"
             },
             {
                 "@type": "BreadcrumbList",
