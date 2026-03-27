@@ -26,6 +26,7 @@ if not IMAGE_DIR.exists():
     )
 
 OUTPUT_DIR = Path("drawings")
+CONFIG_PATH = Path("site_config.json")
 
 STYLE_PATH = "../css/style.css"
 VIEWER_PATH = "../js/viewer.js"
@@ -40,14 +41,14 @@ MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
 HOME_DESCRIPTION = (
-    "Christian Skagen is a Norwegian visual artist working with systematic ink drawing and sequential archives. "
+    "Christian Skagen is a Norwegian visual artist working with systematic, meditative ink drawing. "
     "The drawings are constructed as linear fields through layered parallel line systems, "
     "accumulating measurable distance — often reaching kilometers of total line length — "
     "built from repeated signals (individual lines)."
 )
 ARCHIVE_TITLE = "archive – Christian Skagen"
 ARCHIVE_DESCRIPTION = (
-    "Sequential archive of numbered ink drawings by Norwegian artist Christian Skagen, "
+    "Selection of numbered ink drawings by Norwegian artist Christian Skagen, "
     "constructed as layered parallel line systems forming linear fields."
 )
 GLOBAL_KEYWORDS = [
@@ -65,7 +66,7 @@ GLOBAL_KEYWORDS = [
 
 INDEX_INTRO = """Christian Skagen is a Norwegian visual artist working with drawing as constructed, meditative system.
 
-This site functions as a public sequential archive of numbered drawings.
+This site functions as a public selection of numbered drawings.
 
 Most drawings consist of linear fields drawn with a fountain pen and ruler.
 The number stamp on each drawing contains two pieces of information:
@@ -88,7 +89,7 @@ print
 xxx (enter drawing number)"""
 
 ARCHIVE_INTRO = (
-    "Sequential archive of numbered ink drawings by Christian Skagen. "
+    "Selection numbered ink drawings by Christian Skagen. "
     "Use the command line below or select a drawing number."
 )
 
@@ -254,6 +255,15 @@ def validate(items):
 
 def sort_items(items):
     return sorted(items, key=lambda x: x["base"])
+
+def load_omit_set():
+    if not CONFIG_PATH.exists():
+        return set()
+
+    data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    omit = data.get("omit", [])
+
+    return {int(x) for x in omit}
 
 
 # ==================================================
@@ -729,6 +739,10 @@ def clean_output_dir():
 
 def build():
     items, ignored = parse_images()
+
+    omit_set = load_omit_set()
+    items = [item for item in items if item["base"] not in omit_set]
+
     validate(items)
     items = sort_items(items)
 
