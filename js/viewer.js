@@ -110,13 +110,6 @@ function setupViewer(config) {
 
     // --------------------------------------------------
     // keyboard navigation
-    // drawing pages:
-    //   right = next
-    //   left = prev
-    // homepage:
-    //   right = latest
-    //   left = first
-    //   R = random
     // --------------------------------------------------
 
     document.addEventListener("keydown", function (event) {
@@ -126,9 +119,6 @@ function setupViewer(config) {
       const typing = activeTag === "input" || activeTag === "textarea";
 
       if (typing) return;
-
-      // let browser/system shortcuts pass through
-      // examples: Cmd+R, Ctrl+R, Cmd+P, Cmd+F
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
       if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F"].includes(event.key)) {
@@ -159,22 +149,12 @@ function setupViewer(config) {
         window.location.href = firstPage;
       }
 
-      // --------------------------------------------------
-      // random shortcut (R)
-      // --------------------------------------------------
-
       if (event.key === "r" || event.key === "R") {
         goToRandom(archiveSequence);
       }
 
-      // --------------------------------------------------
-      // open full image
-      // only works on drawing pages with an image
-      // --------------------------------------------------
-
       if (event.key === "f" || event.key === "F") {
         const img = document.querySelector(".image-area img");
-
         if (img) {
           window.open(img.src, "_blank");
         }
@@ -182,13 +162,7 @@ function setupViewer(config) {
     });
 
     // --------------------------------------------------
-    // swipe navigation
-    // drawing pages:
-    //   swipe left = next
-    //   swipe right = prev
-    // homepage:
-    //   swipe left = latest
-    //   swipe right = first
+    // swipe / tap navigation
     // --------------------------------------------------
 
     if (swipeArea) {
@@ -196,8 +170,9 @@ function setupViewer(config) {
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
+      let touchEndY = 0;
       let lastTap = 0;
-      const DOUBLE_TAP_DELAY = 300;let touchEndY = 0;
+      const DOUBLE_TAP_DELAY = 300;
 
       swipeArea.addEventListener(
         "touchstart",
@@ -206,84 +181,72 @@ function setupViewer(config) {
           touchStartX = touch.screenX;
           touchStartY = touch.screenY;
         },
-        { passive: false }
+        { passive: true }
       );
 
       swipeArea.addEventListener(
-  "touchend",
-  function (event) {
+        "touchend",
+        function (event) {
+          const now = Date.now();
+          const touch = event.changedTouches[0];
 
-    const now = Date.now();
+          touchEndX = touch.screenX;
+          touchEndY = touch.screenY;
 
-    // --------------------------------------------------
-    // DOUBLE TAP → RANDOM
-    // --------------------------------------------------
+          const dx = touchEndX - touchStartX;
+          const dy = touchEndY - touchStartY;
 
-    if (now - lastTap < DOUBLE_TAP_DELAY) {
-      event.preventDefault();
-      lastTap = 0;
+          // swipe first
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
 
-      goToRandom(archiveSequence);
-      return;
+            if (dx < 0) {
+              if (nextPage) {
+                window.location.href = nextPage;
+              } else if (latestPage) {
+                window.location.href = latestPage;
+              }
+            }
+
+            if (dx > 0) {
+              if (prevPage) {
+                window.location.href = prevPage;
+              } else if (firstPage) {
+                window.location.href = firstPage;
+              }
+            }
+
+            return;
+          }
+
+          // double tap = random
+          if (now - lastTap < DOUBLE_TAP_DELAY) {
+            lastTap = 0;
+            goToRandom(archiveSequence);
+            return;
+          }
+
+          // single tap = next/latest
+          lastTap = now;
+
+          setTimeout(() => {
+            if (lastTap && Date.now() - lastTap >= DOUBLE_TAP_DELAY) {
+              lastTap = 0;
+
+              if (nextPage) {
+                window.location.href = nextPage;
+              } else if (latestPage) {
+                window.location.href = latestPage;
+              }
+            }
+          }, DOUBLE_TAP_DELAY);
+        },
+        { passive: true }
+      );
     }
-
-    lastTap = now;
-
-    const touch = event.changedTouches[0];
-
-    touchEndX = touch.screenX;
-    touchEndY = touch.screenY;
-
-    const dx = touchEndX - touchStartX;
-    const dy = touchEndY - touchStartY;
-
-    // --------------------------------------------------
-    // SWIPE → NEXT / PREV (unchanged)
-    // --------------------------------------------------
-
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-
-      if (dx < 0) {
-        if (nextPage) {
-          window.location.href = nextPage;
-        } else if (latestPage) {
-          window.location.href = latestPage;
-        }
-      }
-
-      if (dx > 0) {
-        if (prevPage) {
-          window.location.href = prevPage;
-        } else if (firstPage) {
-          window.location.href = firstPage;
-        }
-      }
-
-      return;
-    }
-
-    // --------------------------------------------------
-    // SINGLE TAP → NEXT (delayed)
-    // --------------------------------------------------
-
-    setTimeout(() => {
-      if (Date.now() - lastTap >= DOUBLE_TAP_DELAY) {
-        if (nextPage) {
-          window.location.href = nextPage;
-        } else if (latestPage) {
-          window.location.href = latestPage;
-        }
-      }
-    }, DOUBLE_TAP_DELAY);
-
-  },
-  { passive: false }
-);
+  }
 
   // --------------------------------------------------
   // optional archive report loading
-  // homepage uses this to discover first/latest/sequence
-  // drawing pages still use fixed next/prev plus sequence
   // --------------------------------------------------
 
   if (useArchiveReport) {
