@@ -225,25 +225,23 @@ function setupViewer(config) {
             return;
           }
 
-          // single tap = next/latest
-          lastTap = now;
+        // --------------------------------------------------
+        // SINGLE TAP → NEXT / LATEST
+        // --------------------------------------------------
 
-          setTimeout(() => {
-            if (lastTap && Date.now() - lastTap >= DOUBLE_TAP_DELAY) {
-              lastTap = 0;
+        tapTimer = setTimeout(() => {
+        tapTimer = null;
 
-              if (nextPage) {
-                window.location.href = nextPage;
-              } else if (latestPage) {
-                window.location.href = latestPage;
-              }
-            }
-          }, DOUBLE_TAP_DELAY);
-        },
-        { passive: true }
-      );
-    }
-  }
+        if (nextPage) {
+          window.location.href = nextPage;
+        } else if (latestPage) {
+          window.location.href = latestPage;
+        }
+      }, DOUBLE_TAP_DELAY);
+    },
+    { passive: true }
+  );
+}
 
   // --------------------------------------------------
   // optional archive report loading
