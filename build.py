@@ -675,14 +675,7 @@ def render_page(item, prev_html, next_html, first_html):
         css_path=STYLE_PATH,
     )
 
-    if next_html:
-        image_block = f'''<div class="image-area" id="swipe-area">
-  <a href="{next_html}">
-    <img src="{image_src}" alt="{html_escape(item['alt'])}" loading="eager" decoding="async">
-  </a>
-</div>'''
-    else:
-        image_block = f'''<div class="image-area" id="swipe-area">
+    image_block = f'''<div class="image-area" id="swipe-area">
   <img src="{image_src}" alt="{html_escape(item['alt'])}" loading="eager" decoding="async">
 </div>'''
 
