@@ -196,7 +196,8 @@ function setupViewer(config) {
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
-      let touchEndY = 0;
+      let lastTap = 0;
+      const DOUBLE_TAP_DELAY = 300;let touchEndY = 0;
 
       swipeArea.addEventListener(
         "touchstart",
@@ -205,43 +206,79 @@ function setupViewer(config) {
           touchStartX = touch.screenX;
           touchStartY = touch.screenY;
         },
-        { passive: true }
+        { passive: false }
       );
 
       swipeArea.addEventListener(
-        "touchend",
-        function (event) {
-          const touch = event.changedTouches[0];
+  "touchend",
+  function (event) {
 
-          touchEndX = touch.screenX;
-          touchEndY = touch.screenY;
+    const now = Date.now();
 
-          const dx = touchEndX - touchStartX;
-          const dy = touchEndY - touchStartY;
+    // --------------------------------------------------
+    // DOUBLE TAP → RANDOM
+    // --------------------------------------------------
 
-          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+    if (now - lastTap < DOUBLE_TAP_DELAY) {
+      event.preventDefault();
+      lastTap = 0;
 
-            if (dx < 0) {
-              if (nextPage) {
-                window.location.href = nextPage;
-              } else if (latestPage) {
-                window.location.href = latestPage;
-              }
-            }
-
-            if (dx > 0) {
-              if (prevPage) {
-                window.location.href = prevPage;
-              } else if (firstPage) {
-                window.location.href = firstPage;
-              }
-            }
-          }
-        },
-        { passive: true }
-      );
+      goToRandom(archiveSequence);
+      return;
     }
-  }
+
+    lastTap = now;
+
+    const touch = event.changedTouches[0];
+
+    touchEndX = touch.screenX;
+    touchEndY = touch.screenY;
+
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+
+    // --------------------------------------------------
+    // SWIPE → NEXT / PREV (unchanged)
+    // --------------------------------------------------
+
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+
+      if (dx < 0) {
+        if (nextPage) {
+          window.location.href = nextPage;
+        } else if (latestPage) {
+          window.location.href = latestPage;
+        }
+      }
+
+      if (dx > 0) {
+        if (prevPage) {
+          window.location.href = prevPage;
+        } else if (firstPage) {
+          window.location.href = firstPage;
+        }
+      }
+
+      return;
+    }
+
+    // --------------------------------------------------
+    // SINGLE TAP → NEXT (delayed)
+    // --------------------------------------------------
+
+    setTimeout(() => {
+      if (Date.now() - lastTap >= DOUBLE_TAP_DELAY) {
+        if (nextPage) {
+          window.location.href = nextPage;
+        } else if (latestPage) {
+          window.location.href = latestPage;
+        }
+      }
+    }, DOUBLE_TAP_DELAY);
+
+  },
+  { passive: false }
+);
 
   // --------------------------------------------------
   // optional archive report loading
