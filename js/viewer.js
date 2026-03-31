@@ -179,7 +179,7 @@ function setupViewer(config) {
       }
     });
 
-    // --------------------------------------------------
+        // --------------------------------------------------
     // swipe navigation
     // drawing pages:
     //   swipe left = next
@@ -187,6 +187,7 @@ function setupViewer(config) {
     // homepage:
     //   swipe left = latest
     //   swipe right = first
+    //   tap = random
     // --------------------------------------------------
 
     if (swipeArea) {
@@ -194,7 +195,9 @@ function setupViewer(config) {
       let touchStartY = 0;
       let touchEndX = 0;
       let touchEndY = 0;
+
       const SWIPE_THRESHOLD = 50;
+      const TAP_MOVE_THRESHOLD = 12;
 
       swipeArea.addEventListener(
         "touchstart",
@@ -217,7 +220,11 @@ function setupViewer(config) {
           const dx = touchEndX - touchStartX;
           const dy = touchEndY - touchStartY;
 
-          if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          const absDx = Math.abs(dx);
+          const absDy = Math.abs(dy);
+
+          // swipe left / right
+          if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
             if (dx < 0) {
               if (nextPage) {
                 window.location.href = nextPage;
@@ -233,12 +240,18 @@ function setupViewer(config) {
                 window.location.href = firstPage;
               }
             }
+
+            return;
+          }
+
+          // small movement = tap -> random
+          if (absDx <= TAP_MOVE_THRESHOLD && absDy <= TAP_MOVE_THRESHOLD) {
+            goToRandom(archiveSequence);
           }
         },
         { passive: true }
       );
     }
-  }
 
   // --------------------------------------------------
   // optional archive report loading
