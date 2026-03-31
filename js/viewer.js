@@ -6,7 +6,6 @@ function goToRandom(archiveSequence) {
 }
 
 function goToCommand(value, config) {
-
   const v = value.trim().toLowerCase();
 
   if (!v) return;
@@ -71,7 +70,6 @@ function goToCommand(value, config) {
 }
 
 function setupViewer(config) {
-
   const {
     nextPage = null,
     prevPage = null,
@@ -90,7 +88,6 @@ function setupViewer(config) {
   let archiveSequence = [];
 
   function runSetup() {
-
     // --------------------------------------------------
     // console input
     // --------------------------------------------------
@@ -110,15 +107,26 @@ function setupViewer(config) {
 
     // --------------------------------------------------
     // keyboard navigation
+    // drawing pages:
+    //   right = next
+    //   left = prev
+    // homepage:
+    //   right = latest
+    //   left = first
+    //   up = latest
+    //   down = first
+    //   R = random
+    //   F = open full image
     // --------------------------------------------------
 
     document.addEventListener("keydown", function (event) {
-
       const activeElement = document.activeElement;
       const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
       const typing = activeTag === "input" || activeTag === "textarea";
 
       if (typing) return;
+
+      // let browser/system shortcuts pass through
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
       if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F"].includes(event.key)) {
@@ -131,6 +139,7 @@ function setupViewer(config) {
         } else if (latestPage) {
           window.location.href = latestPage;
         }
+        return;
       }
 
       if (event.key === "ArrowLeft") {
@@ -139,22 +148,31 @@ function setupViewer(config) {
         } else if (firstPage) {
           window.location.href = firstPage;
         }
+        return;
       }
 
-      if (event.key === "ArrowUp" && latestPage) {
-        window.location.href = latestPage;
+      if (event.key === "ArrowUp") {
+        if (latestPage) {
+          window.location.href = latestPage;
+        }
+        return;
       }
 
-      if (event.key === "ArrowDown" && firstPage) {
-        window.location.href = firstPage;
+      if (event.key === "ArrowDown") {
+        if (firstPage) {
+          window.location.href = firstPage;
+        }
+        return;
       }
 
       if (event.key === "r" || event.key === "R") {
         goToRandom(archiveSequence);
+        return;
       }
 
       if (event.key === "f" || event.key === "F") {
         const img = document.querySelector(".image-area img");
+
         if (img) {
           window.open(img.src, "_blank");
         }
@@ -162,18 +180,20 @@ function setupViewer(config) {
     });
 
     // --------------------------------------------------
-    // swipe / tap navigation
+    // swipe navigation
+    // drawing pages:
+    //   swipe left = next
+    //   swipe right = prev
+    // homepage:
+    //   swipe left = latest
+    //   swipe right = first
     // --------------------------------------------------
 
     if (swipeArea) {
-
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
       let touchEndY = 0;
-      let lastTap = 0;
-      let tapTimer = null;
-      const DOUBLE_TAP_DELAY = 300;
       const SWIPE_THRESHOLD = 50;
 
       swipeArea.addEventListener(
@@ -189,7 +209,6 @@ function setupViewer(config) {
       swipeArea.addEventListener(
         "touchend",
         function (event) {
-          const now = Date.now();
           const touch = event.changedTouches[0];
 
           touchEndX = touch.screenX;
@@ -198,9 +217,7 @@ function setupViewer(config) {
           const dx = touchEndX - touchStartX;
           const dy = touchEndY - touchStartY;
 
-          // swipe first
           if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-
             if (dx < 0) {
               if (nextPage) {
                 window.location.href = nextPage;
@@ -216,47 +233,23 @@ function setupViewer(config) {
                 window.location.href = firstPage;
               }
             }
-
-            return;
           }
-
-          // double tap = random
-          if (now - lastTap < DOUBLE_TAP_DELAY) {
-            clearTimeout(tapTimer);
-            tapTimer = null;
-            lastTap = 0;
-            goToRandom(archiveSequence);
-            return;
-          }
-
-        // --------------------------------------------------
-        // SINGLE TAP → NEXT / LATEST
-        // --------------------------------------------------
-
-        tapTimer = setTimeout(() => {
-        tapTimer = null;
-
-        if (nextPage) {
-          window.location.href = nextPage;
-        } else if (latestPage) {
-          window.location.href = latestPage;
-        }
-      }, DOUBLE_TAP_DELAY);
-    },
-    { passive: true }
-  );
-}
+        },
+        { passive: true }
+      );
+    }
+  }
 
   // --------------------------------------------------
   // optional archive report loading
+  // homepage uses this to discover first/latest/sequence
+  // drawing pages still use fixed next/prev plus sequence
   // --------------------------------------------------
 
   if (useArchiveReport) {
-
     fetch(archiveReportPath)
       .then(r => r.json())
       .then(data => {
-
         if (data.latest) {
           latestPage = "/drawings/" + data.latest + ".html";
         }
@@ -275,9 +268,7 @@ function setupViewer(config) {
         console.error("Archive report load failed", err);
         runSetup();
       });
-
   } else {
-
     fetch(archiveReportPath)
       .then(r => r.json())
       .then(data => {
