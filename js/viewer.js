@@ -17,45 +17,25 @@ function goToCommand(value, config) {
     archiveSequence = []
   } = config;
 
-  // --------------------------------------------------
-  // direct number navigation
-  // --------------------------------------------------
-
   if (/^\d+$/.test(v)) {
     window.location.href = "/drawings/tegning_nr" + v + ".html";
     return;
   }
-
-  // --------------------------------------------------
-  // print command
-  // --------------------------------------------------
 
   if (v === "print") {
     window.print();
     return;
   }
 
-  // --------------------------------------------------
-  // home command
-  // --------------------------------------------------
-
   if (v === "home") {
     window.location.href = homePage;
     return;
   }
 
-  // --------------------------------------------------
-  // random command
-  // --------------------------------------------------
-
   if (v === "random") {
     goToRandom(archiveSequence);
     return;
   }
-
-  // --------------------------------------------------
-  // normal commands
-  // --------------------------------------------------
 
   const commands = {
     latest: latestPage,
@@ -88,10 +68,6 @@ function setupViewer(config) {
   let archiveSequence = [];
 
   function runSetup() {
-    // --------------------------------------------------
-    // console input
-    // --------------------------------------------------
-
     if (commandInput) {
       commandInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -105,28 +81,12 @@ function setupViewer(config) {
       });
     }
 
-    // --------------------------------------------------
-    // keyboard navigation
-    // drawing pages:
-    //   right = next
-    //   left = prev
-    // homepage:
-    //   right = latest
-    //   left = first
-    //   up = latest
-    //   down = first
-    //   R = random
-    //   F = open full image
-    // --------------------------------------------------
-
     document.addEventListener("keydown", function (event) {
       const activeElement = document.activeElement;
       const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
       const typing = activeTag === "input" || activeTag === "textarea";
 
       if (typing) return;
-
-      // let browser/system shortcuts pass through
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
       if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F"].includes(event.key)) {
@@ -172,23 +132,11 @@ function setupViewer(config) {
 
       if (event.key === "f" || event.key === "F") {
         const img = document.querySelector(".image-area img");
-
         if (img) {
           window.open(img.src, "_blank");
         }
       }
     });
-
-    // --------------------------------------------------
-    // swipe navigation
-    // drawing pages:
-    //   swipe left = next
-    //   swipe right = prev
-    // homepage:
-    //   swipe left = latest
-    //   swipe right = first
-    //   tap = random
-    // --------------------------------------------------
 
     if (swipeArea) {
       let touchStartX = 0;
@@ -223,7 +171,6 @@ function setupViewer(config) {
           const absDx = Math.abs(dx);
           const absDy = Math.abs(dy);
 
-          // swipe left / right
           if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
             if (dx < 0) {
               if (nextPage) {
@@ -244,7 +191,6 @@ function setupViewer(config) {
             return;
           }
 
-          // small movement = tap -> random
           if (absDx <= TAP_MOVE_THRESHOLD && absDy <= TAP_MOVE_THRESHOLD) {
             goToRandom(archiveSequence);
           }
@@ -253,12 +199,6 @@ function setupViewer(config) {
       );
     }
   }
-
-  // --------------------------------------------------
-  // optional archive report loading
-  // homepage uses this to discover first/latest/sequence
-  // drawing pages still use fixed next/prev plus sequence
-  // --------------------------------------------------
 
   if (useArchiveReport) {
     fetch(archiveReportPath)
