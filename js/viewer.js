@@ -172,7 +172,9 @@ function setupViewer(config) {
       let touchEndX = 0;
       let touchEndY = 0;
       let lastTap = 0;
+      let tapTimer = null;
       const DOUBLE_TAP_DELAY = 300;
+      const SWIPE_THRESHOLD = 50;
 
       swipeArea.addEventListener(
         "touchstart",
@@ -197,7 +199,7 @@ function setupViewer(config) {
           const dy = touchEndY - touchStartY;
 
           // swipe first
-          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+          if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
 
             if (dx < 0) {
               if (nextPage) {
@@ -220,6 +222,8 @@ function setupViewer(config) {
 
           // double tap = random
           if (now - lastTap < DOUBLE_TAP_DELAY) {
+            clearTimeout(tapTimer);
+            tapTimer = null;
             lastTap = 0;
             goToRandom(archiveSequence);
             return;
