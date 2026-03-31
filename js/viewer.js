@@ -179,7 +179,7 @@ function setupViewer(config) {
       }
     });
 
-        // --------------------------------------------------
+    // --------------------------------------------------
     // swipe navigation
     // drawing pages:
     //   swipe left = next
@@ -252,6 +252,7 @@ function setupViewer(config) {
         { passive: true }
       );
     }
+  }
 
   // --------------------------------------------------
   // optional archive report loading
