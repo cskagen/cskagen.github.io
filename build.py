@@ -37,6 +37,8 @@ SITE_NAME = "Christian Skagen – drawings"
 PERSON_NAME = "Christian Skagen"
 DEFAULT_LOCALE = "en"
 
+GA_MEASUREMENT_ID = "G-GLPHFCN8L0"
+
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
@@ -125,6 +127,21 @@ def make_keywords(*extra):
             seen.add(item)
     return ", ".join(deduped)
 
+def google_analytics_tag():
+    if not GA_MEASUREMENT_ID:
+        return ""
+
+    return f'''<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){{dataLayer.push(arguments);}}
+gtag('js', new Date());
+gtag('config', '{GA_MEASUREMENT_ID}', {{
+  'anonymize_ip': true
+}});
+</script>'''
+
 
 def page_head(*, title, description, canonical_url, og_image=None, structured_data=None, css_path="css/style.css"):
     og_image = og_image or abs_url("/images/og-default.jpg")
@@ -148,6 +165,7 @@ def page_head(*, title, description, canonical_url, og_image=None, structured_da
         f'<meta name="twitter:description" content="{html_escape(description)}">',
         f'<meta name="twitter:image" content="{html_escape(og_image)}">',
         f'<link rel="stylesheet" href="{html_escape(css_path)}">',
+        google_analytics_tag(),
     ]
     if structured_data is not None:
         parts.insert(
