@@ -33,7 +33,7 @@ VIEWER_PATH = "../js/viewer.js"
 
 BASE_URL = "https://cskagen.no"
 IMAGE_BASE_URL = "https://images.cskagen.no/images"
-REPLICA_IMAGE_BASE_URL = "https://cskagen.no/replica_images"
+REPLICA_IMAGE_BASE_URL = "https://images.cskagen.no/replica_images"
 REPLICA_OUTPUT_DIR = Path("replica")
 REPLICA_LIST_PAGE = Path("replica.html")
 
