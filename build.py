@@ -411,8 +411,7 @@ body {{
 </style>
 </head>
 <body>
-<div class="replica-meta-top">replica a4
-cskagen.no/replica/tegning_nr{item["base"]}.html</div>
+<div class="replica-meta-top">cskagen.no/replica/tegning_nr{item["base"]}.html</div>
 
 <div class="replica-print">
   <img
