@@ -434,8 +434,8 @@ window.addEventListener("load", function () {{
   const min = String(now.getMinutes()).padStart(2, "0");
 
   const timestamp = `${{dd}}/${{mm}}/${{yyyy}}, ${{hh}}:${{min}}`;
-  document.querySelector(".replica-meta-bottom").textContent =
-    `${{timestamp}}\ntegning nr {item["base"]} – Christian Skagen`;
+document.querySelector(".replica-meta-bottom").textContent =
+    `${{timestamp}} - replication`;
 
   setTimeout(function () {{
     window.print();
