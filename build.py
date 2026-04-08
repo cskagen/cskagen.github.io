@@ -33,6 +33,10 @@ VIEWER_PATH = "../js/viewer.js"
 
 BASE_URL = "https://cskagen.no"
 IMAGE_BASE_URL = "https://images.cskagen.no/images"
+REPLICA_IMAGE_BASE_URL = "https://cskagen.no/replica_images"
+REPLICA_OUTPUT_DIR = Path("replica")
+REPLICA_LIST_PAGE = Path("replica.html")
+
 SITE_NAME = "Christian Skagen – drawings"
 PERSON_NAME = "Christian Skagen"
 DEFAULT_LOCALE = "en"
@@ -88,6 +92,8 @@ first
 home
 archive
 print
+replica
+replica list
 xxx (enter drawing number)"""
 
 ARCHIVE_INTRO = (
@@ -126,6 +132,7 @@ def make_keywords(*extra):
             deduped.append(item)
             seen.add(item)
     return ", ".join(deduped)
+
 
 def google_analytics_tag():
     if not GA_MEASUREMENT_ID:
@@ -274,6 +281,7 @@ def validate(items):
 def sort_items(items):
     return sorted(items, key=lambda x: x["base"])
 
+
 def load_omit_set():
     if not CONFIG_PATH.exists():
         return set()
@@ -282,6 +290,203 @@ def load_omit_set():
     omit = data.get("omit", [])
 
     return {int(x) for x in omit}
+
+
+# ==================================================
+# REPLICA HELPERS
+# ==================================================
+
+
+def replica_image_name(base: int) -> str:
+    return f"tegning_nr{base}_a4.jpg"
+
+
+def replica_image_url(base: int) -> str:
+    return f"{REPLICA_IMAGE_BASE_URL}/{replica_image_name(base)}"
+
+
+def replica_html_name(base: int) -> str:
+    return f"tegning_nr{base}.html"
+
+
+def replica_html_url(base: int) -> str:
+    return f"{BASE_URL}/replica/{replica_html_name(base)}"
+
+
+def replica_bases_for_v1():
+    return {851, 858}
+
+
+def render_replica_page(item):
+    replica_src = replica_image_url(item["base"])
+    replica_page_url = replica_html_url(item["base"])
+    title = f"tegning nr {item['base']} replica – Christian Skagen"
+    description = f"A4 print page for drawing nr {item['base']}."
+
+    head = page_head(
+    title=title,
+    description=description,
+    canonical_url=replica_page_url,
+    og_image=item["image_url"],
+    structured_data=None,
+    css_path="../css/style.css",
+    ).replace(
+        '<meta name="robots" content="index,follow,max-image-preview:large">',
+        '<meta name="robots" content="noindex,nofollow">'
+    )
+
+    return f'''<!doctype html>
+<html>
+<head>
+{head}
+<style>
+@page {{
+  size: A4;
+  margin: 0;
+}}
+
+html, body {{
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}}
+
+.replica-print {{
+  width: 210mm;
+  height: 297mm;
+}}
+
+.replica-print img {{
+  display: block;
+  width: 210mm;
+  height: 297mm;
+  object-fit: contain;
+}}
+
+.replica-message {{
+  display: none;
+}}
+
+@media screen {{
+  body {{
+    margin: 0;
+    padding: 24px;
+    background: #dcdcdc;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }}
+
+  .replica-print {{
+    width: min(100%, 210mm);
+    height: auto;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+  }}
+
+  .replica-print img {{
+    width: 100%;
+    height: auto;
+  }}
+
+  .replica-message {{
+    display: block;
+    position: fixed;
+    left: 16px;
+    bottom: 12px;
+    font-family: "DIN 1451", "DIN Alternate", "DIN Condensed", "Arial Narrow", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #333;
+  }}
+}}
+
+@media print {{
+  .replica-message {{
+    display: none;
+  }}
+}}
+</style>
+</head>
+<body>
+<div class="replica-print">
+  <img
+    src="{replica_src}"
+    alt="A4 replica for drawing nr {item['base']}"
+    onerror="document.body.innerHTML='<div style=&quot;padding:24px;font-family:Arial,sans-serif;&quot;>Replica not available for drawing nr {item["base"]}.</div>';"
+  >
+</div>
+<div class="replica-message">&gt; printing replica: tegning nr {item['base']}</div>
+<script>
+window.addEventListener("load", function () {{
+  setTimeout(function () {{
+    window.print();
+  }}, 180);
+}});
+</script>
+</body>
+</html>
+'''
+
+
+def write_replica_list_page(items):
+    lines = [
+        "<!doctype html>",
+        "<html>",
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        "<title>replica – Christian Skagen</title>",
+        '<meta name="robots" content="noindex,nofollow">',
+        '<link rel="stylesheet" href="css/style.css">',
+        "<style>",
+        ".replica-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:4px 12px;font-size:13px;line-height:1.35;}",
+        ".replica-grid a{color:inherit;text-decoration:none;}",
+        ".replica-grid a:hover{text-decoration:underline;}",
+        ".replica-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
+        ".replica-item{min-width:0;word-break:break-word;}",
+        "@media (max-width:900px){.replica-grid{grid-template-columns:repeat(3,1fr);}}",
+        "@media (max-width:600px){.replica-grid{grid-template-columns:repeat(2,1fr);font-size:12px;}}",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="wrapper">',
+        '<h1><a href="/">replica</a></h1>',
+        '<div class="replica-meta">Available A4 replica print pages. Commands: replica, replica 851, replica 858.</div>',
+        '<div class="image-area" id="swipe-area">',
+        '<div class="replica-grid">',
+    ]
+
+    for item in items:
+        href = f"replica/{replica_html_name(item['base'])}"
+        label = f"{item['base']}"
+        lines.append(f'<div class="replica-item"><a href="{href}">{label}</a></div>')
+
+    lines.extend([
+        "</div>",
+        "</div>",
+        '<div class="prompt-wrap">',
+        '<span class="prompt">&gt;</span>',
+        '<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">',
+        "</div>",
+        "</div>",
+        '<script src="js/viewer.js"></script>',
+        "<script>",
+        "setupViewer({",
+        "  nextPage: null,",
+        "  prevPage: null,",
+        "  latestPage: null,",
+        "  firstPage: null,",
+        "  useArchiveReport: true,",
+        "  archiveReportPath: \"/archive_report.json\",",
+        "  homePage: \"/\"",
+        "})",
+        "</script>",
+        "</body>",
+        "</html>",
+    ])
+
+    REPLICA_LIST_PAGE.write_text("\n".join(lines), encoding="utf-8")
 
 
 # ==================================================
@@ -645,7 +850,6 @@ def artwork_structured_data(item):
                 "url": item["image_url"],
                 "description": item["alt"],
                 "creator": {"@id": BASE_URL + "/#person"},
-
                 "creditText": "Christian Skagen",
                 "copyrightNotice": "© Christian Skagen"
             },
@@ -680,9 +884,9 @@ def artwork_structured_data(item):
 def render_page(item, prev_html, next_html, first_html):
     image_src = f"{IMAGE_BASE_URL}/{item['image_name']}"
     meta_description = (
-    f"Drawing nr {item['base']}. "
-    "A linear field constructed through layered parallel line systems in ink."
-)
+        f"Drawing nr {item['base']}. "
+        "A linear field constructed through layered parallel line systems in ink."
+    )
 
     head = page_head(
         title=item["page_title"],
@@ -748,6 +952,16 @@ def clean_output_dir():
             path.unlink()
 
 
+def clean_replica_output_dir():
+    REPLICA_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for path in REPLICA_OUTPUT_DIR.iterdir():
+        if not path.is_file():
+            continue
+        name = path.name
+        if re.match(r"^tegning_nr\d+\.html$", name):
+            path.unlink()
+
+
 def build():
     items, ignored = parse_images()
 
@@ -764,6 +978,7 @@ def build():
     write_archive_page(items)
 
     clean_output_dir()
+    clean_replica_output_dir()
 
     first_html = items[0]["html_name"]
 
@@ -778,9 +993,19 @@ def build():
     latest_html = render_page(latest, latest_prev, None, first_html)
     (OUTPUT_DIR / "tegning_latest.html").write_text(latest_html, encoding="utf-8")
 
+    replica_bases = replica_bases_for_v1()
+    replica_items = [item for item in items if item["base"] in replica_bases]
+
+    for item in replica_items:
+        replica_html = render_replica_page(item)
+        (REPLICA_OUTPUT_DIR / replica_html_name(item["base"])).write_text(replica_html, encoding="utf-8")
+
+    write_replica_list_page(replica_items)
+
     print(f"Built {len(items)} pages")
     print(f"First: {items[0]['slug']}")
     print(f"Latest: {items[-1]['slug']}")
+    print(f"Replica pages: {len(replica_items)}")
 
 
 if __name__ == "__main__":

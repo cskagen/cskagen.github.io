@@ -5,6 +5,16 @@ function goToRandom(archiveSequence) {
   window.location.href = "/drawings/" + choice + ".html";
 }
 
+function getDrawingNumberFromPath() {
+  const match = window.location.pathname.match(/tegning_nr(\d+)/);
+  return match ? match[1] : null;
+}
+
+function openReplicaPageForNumber(nr) {
+  if (!nr) return;
+  window.open("/replica/tegning_nr" + nr + ".html", "_blank");
+}
+
 function goToCommand(value, config) {
   const v = value.trim().toLowerCase();
 
@@ -24,6 +34,25 @@ function goToCommand(value, config) {
 
   if (v === "print") {
     window.print();
+    return;
+  }
+
+  if (v === "replica") {
+    const nr = getDrawingNumberFromPath();
+    if (nr) {
+      openReplicaPageForNumber(nr);
+    }
+    return;
+  }
+
+  if (/^replica\s+\d+$/.test(v)) {
+    const nr = v.split(/\s+/)[1];
+    openReplicaPageForNumber(nr);
+    return;
+  }
+
+  if (v === "replica list") {
+    window.location.href = "/replica.html";
     return;
   }
 

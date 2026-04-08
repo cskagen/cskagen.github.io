@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>replica – Christian Skagen</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.replica-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:4px 12px;font-size:13px;line-height:1.35;}
+.replica-grid a{color:inherit;text-decoration:none;}
+.replica-grid a:hover{text-decoration:underline;}
+.replica-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}
+.replica-item{min-width:0;word-break:break-word;}
+@media (max-width:900px){.replica-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:600px){.replica-grid{grid-template-columns:repeat(2,1fr);font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<h1><a href="/">replica</a></h1>
+<div class="replica-meta">Available A4 replica print pages. Commands: replica, replica 851, replica 858.</div>
+<div class="image-area" id="swipe-area">
+<div class="replica-grid">
+<div class="replica-item"><a href="replica/tegning_nr851.html">851</a></div>
+<div class="replica-item"><a href="replica/tegning_nr858.html">858</a></div>
+</div>
+</div>
+<div class="prompt-wrap">
+<span class="prompt">&gt;</span>
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
+</div>
+</div>
+<script src="js/viewer.js"></script>
+<script>
+setupViewer({
+  nextPage: null,
+  prevPage: null,
+  latestPage: null,
+  firstPage: null,
+  useArchiveReport: true,
+  archiveReportPath: "/archive_report.json",
+  homePage: "/"
+})
+</script>
+</body>
+</html>
