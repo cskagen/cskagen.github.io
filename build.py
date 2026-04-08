@@ -314,7 +314,7 @@ def replica_html_url(base: int) -> str:
 
 
 def replica_bases_for_v1():
-    return {851, 858}
+    return {840, 841, 842, 844, 845, 851, 852, 853, 854, 855, 857, 858}
 
 
 def render_replica_page(item):
