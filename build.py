@@ -358,7 +358,8 @@ body {{
 .replica-meta-top {{
   position: absolute;
   top: 8mm;
-  left: 8mm;
+  right: 12mm;
+  text-align: right;
   font-size: 10pt;
   line-height: 1.3;
   font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
@@ -369,7 +370,8 @@ body {{
 .replica-meta-bottom {{
   position: absolute;
   bottom: 8mm;
-  left: 8mm;
+  right: 12mm;
+  text-align: right;
   font-size: 10pt;
   line-height: 1.3;
   font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
