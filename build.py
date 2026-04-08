@@ -324,12 +324,12 @@ def render_replica_page(item):
     description = f"A4 print page for drawing nr {item['base']}."
 
     head = page_head(
-    title=title,
-    description=description,
-    canonical_url=replica_page_url,
-    og_image=item["image_url"],
-    structured_data=None,
-    css_path="../css/style.css",
+        title=title,
+        description=description,
+        canonical_url=replica_page_url,
+        og_image=item["image_url"],
+        structured_data=None,
+        css_path="../css/style.css",
     ).replace(
         '<meta name="robots" content="index,follow,max-image-preview:large">',
         '<meta name="robots" content="noindex,nofollow">'
@@ -351,6 +351,32 @@ html, body {{
   background: #ffffff;
 }}
 
+body {{
+  position: relative;
+}}
+
+.replica-meta-top {{
+  position: absolute;
+  top: 8mm;
+  left: 8mm;
+  font-size: 10pt;
+  line-height: 1.3;
+  font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
+  color: #000;
+  white-space: pre-line;
+}}
+
+.replica-meta-bottom {{
+  position: absolute;
+  bottom: 8mm;
+  left: 8mm;
+  font-size: 10pt;
+  line-height: 1.3;
+  font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
+  color: #000;
+  white-space: pre-line;
+}}
+
 .replica-print {{
   width: 210mm;
   height: 297mm;
@@ -363,19 +389,12 @@ html, body {{
   object-fit: contain;
 }}
 
-.replica-message {{
-  display: none;
-}}
-
 @media screen {{
   body {{
-    margin: 0;
-    padding: 24px;
     background: #dcdcdc;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    box-sizing: border-box;
   }}
 
   .replica-print {{
@@ -388,27 +407,13 @@ html, body {{
     width: 100%;
     height: auto;
   }}
-
-  .replica-message {{
-    display: block;
-    position: fixed;
-    left: 16px;
-    bottom: 12px;
-    font-family: "DIN 1451", "DIN Alternate", "DIN Condensed", "Arial Narrow", sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: #333;
-  }}
-}}
-
-@media print {{
-  .replica-message {{
-    display: none;
-  }}
 }}
 </style>
 </head>
 <body>
+<div class="replica-meta-top">replica a4
+cskagen.no/replica/tegning_nr{item["base"]}.html</div>
+
 <div class="replica-print">
   <img
     src="{replica_src}"
@@ -416,9 +421,22 @@ html, body {{
     onerror="document.body.innerHTML='<div style=&quot;padding:24px;font-family:Arial,sans-serif;&quot;>Replica not available for drawing nr {item["base"]}.</div>';"
   >
 </div>
-<div class="replica-message">&gt; printing replica: tegning nr {item['base']}</div>
+
+<div class="replica-meta-bottom"></div>
+
 <script>
 window.addEventListener("load", function () {{
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, "0");
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const yyyy = now.getFullYear();
+  const hh = String(now.getHours()).padStart(2, "0");
+  const min = String(now.getMinutes()).padStart(2, "0");
+
+  const timestamp = `${{dd}}/${{mm}}/${{yyyy}}, ${{hh}}:${{min}}`;
+  document.querySelector(".replica-meta-bottom").textContent =
+    `${{timestamp}}\ntegning nr {item["base"]} – Christian Skagen`;
+
   setTimeout(function () {{
     window.print();
   }}, 180);
