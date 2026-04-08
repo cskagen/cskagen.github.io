@@ -358,7 +358,7 @@ body {{
 .replica-meta-top {{
   position: absolute;
   top: 8mm;
-  right: 12mm;
+  right: 18mm;
   text-align: right;
   font-size: 10pt;
   line-height: 1.3;
@@ -370,7 +370,7 @@ body {{
 .replica-meta-bottom {{
   position: absolute;
   bottom: 8mm;
-  right: 12mm;
+  right: 18mm;
   text-align: right;
   font-size: 10pt;
   line-height: 1.3;
