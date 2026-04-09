@@ -86,7 +86,7 @@ arrow keys
 swipe gestures
 console commands:
 
-random
+random (R)
 latest
 first
 home
@@ -436,7 +436,7 @@ window.addEventListener("load", function () {{
 
   const timestamp = `${{dd}}/${{mm}}/${{yyyy}}, ${{hh}}:${{min}}`;
 document.querySelector(".replica-meta-bottom").textContent =
-    `${{timestamp}} - replication`;
+    `${{timestamp}} - >replica`;
 
   setTimeout(function () {{
     window.print();
