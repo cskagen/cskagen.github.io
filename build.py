@@ -57,6 +57,10 @@ ARCHIVE_DESCRIPTION = (
     "Selection of numbered ink drawings by Norwegian artist Christian Skagen, "
     "constructed as layered parallel line systems forming linear fields."
 )
+ABOUT_TITLE = "about – Christian Skagen"
+ABOUT_DESCRIPTION = (
+    "About cskagen.no and the drawing system of Christian Skagen."
+)
 GLOBAL_KEYWORDS = [
     "Christian Skagen",
     "Norwegian artist",
@@ -800,16 +804,16 @@ def write_about_page():
             "@type": "AboutPage",
             "@id": BASE_URL + "/about.html#about",
             "url": BASE_URL + "/about.html",
-            "name": "about – Christian Skagen",
-            "description": "About cskagen.no and the drawing system of Christian Skagen.",
+            "name": ABOUT_TITLE,
+            "description": ABOUT_DESCRIPTION,
             "isPartOf": {"@id": BASE_URL + "/#website"},
             "about": {"@id": BASE_URL + "/#person"},
         }
     ])
 
     head = page_head(
-        title="about – Christian Skagen",
-        description="About cskagen.no and the drawing system of Christian Skagen.",
+        title=ABOUT_TITLE,
+        description=ABOUT_DESCRIPTION,
         canonical_url=BASE_URL + "/about.html",
         structured_data=structured,
         css_path="css/style.css",
