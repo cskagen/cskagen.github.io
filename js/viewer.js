@@ -66,6 +66,11 @@ function goToCommand(value, config) {
     return;
   }
 
+  if (v === "about") {
+  window.location.href = "/about.html";
+  return;
+  }
+
   const commands = {
     latest: latestPage,
     first: firstPage,

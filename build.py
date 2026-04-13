@@ -86,6 +86,7 @@ arrow keys
 swipe gestures
 console commands:
 
+about
 random (R)
 latest
 first
@@ -95,6 +96,38 @@ print
 replica
 replica list
 xxx (enter drawing number)"""
+
+ABOUT_TEXT = """cskagen.no is a sequential archive of ink drawings.
+
+each drawing is a personal occurrence:
+a remnant of presence resulting from defined systemic parameters.
+
+the drawings are constructed as linear fields:
+semi-parallel lines accumulated in layers.
+through repetition and overlay, the signal line disperses into a field.
+
+a drawing typically consists of 36 layers.
+each layer is drawn by hand, line by line.
+
+small variations in ink and direction produce gradual shifts.
+these shifts are emergent.
+
+the system is an evolving constant.
+
+the archive is a curated record.
+omission is structural.
+
+navigation reflects the work:
+one drawing at a time.
+movement is sequential or random.
+
+the site is a production surface.
+selected drawings can be reproduced as a4 replicas
+(> replica list).
+
+each replica is another instance of the same remnant.
+
+— Christian Skagen"""
 
 ARCHIVE_INTRO = (
     "Selected numbered ink drawings by Christian Skagen. "
@@ -655,6 +688,9 @@ def write_sitemap(items):
         "  <url>",
         f"    <loc>{BASE_URL}/archive.html</loc>",
         "  </url>",
+        "  <url>",
+        f"    <loc>{BASE_URL}/about.html</loc>",
+        "  </url>",
     ]
 
     for item in items:
@@ -758,6 +794,73 @@ setupViewer({{
 '''
     Path("index.html").write_text(html, encoding="utf-8")
 
+def write_about_page():
+    structured = website_graph([
+        {
+            "@type": "AboutPage",
+            "@id": BASE_URL + "/about.html#about",
+            "url": BASE_URL + "/about.html",
+            "name": "about – Christian Skagen",
+            "description": "About cskagen.no and the drawing system of Christian Skagen.",
+            "isPartOf": {"@id": BASE_URL + "/#website"},
+            "about": {"@id": BASE_URL + "/#person"},
+        }
+    ])
+
+    head = page_head(
+        title="about – Christian Skagen",
+        description="About cskagen.no and the drawing system of Christian Skagen.",
+        canonical_url=BASE_URL + "/about.html",
+        structured_data=structured,
+        css_path="css/style.css",
+    )
+
+    html = f'''<!doctype html>
+<html>
+<head>
+{head}
+<style>
+.about-text{{
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  text-align:left;
+  font-size:16px;
+  line-height:1.5;
+  white-space:pre-line;
+}}
+@media (max-width:600px){{
+  .about-text{{font-size:14px;}}
+}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<h1><a href="/">about</a></h1>
+<div class="image-area" id="swipe-area">
+<div class="about-text">{html_escape(ABOUT_TEXT)}</div>
+</div>
+<div class="prompt-wrap">
+<span class="prompt">&gt;</span>
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
+</div>
+</div>
+<script src="js/viewer.js"></script>
+<script>
+setupViewer({{
+  nextPage: null,
+  prevPage: null,
+  latestPage: null,
+  firstPage: null,
+  useArchiveReport: true,
+  archiveReportPath: "/archive_report.json",
+  homePage: "/"
+}})
+</script>
+</body>
+</html>
+'''
+    Path("about.html").write_text(html, encoding="utf-8")
 
 def write_archive_page(items):
     latest_item = items[-1]
@@ -999,6 +1102,7 @@ def build():
     write_archive_report_page(items, ignored)
     write_sitemap(items)
     write_home_page(items)
+    write_about_page()
     write_archive_page(items)
 
     clean_output_dir()
