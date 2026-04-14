@@ -10,9 +10,21 @@ function getDrawingNumberFromPath() {
   return match ? match[1] : null;
 }
 
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
 function openReplicaPageForNumber(nr) {
   if (!nr) return;
-  window.open("/replica/tegning_nr" + nr + ".html", "_blank");
+
+  let url = "/replica/tegning_nr" + nr + ".html";
+
+  if (isIOSDevice()) {
+    url += "?clean=1";
+  }
+
+  window.open(url, "_blank");
 }
 
 function goToCommand(value, config) {

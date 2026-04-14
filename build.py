@@ -422,6 +422,11 @@ body {{
   white-space: pre-line;
 }}
 
+.ios-clean .replica-meta-top,
+.ios-clean .replica-meta-bottom {{
+  display: none !important;
+}}
+
 .replica-print {{
   width: 210mm;
   height: 297mm;
@@ -469,6 +474,13 @@ body {{
 <div class="replica-meta-bottom"></div>
 
 <script>
+(function () {{
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("clean") === "1") {{
+    document.documentElement.classList.add("ios-clean");
+  }}
+}})();
+
 window.addEventListener("load", function () {{
   const now = new Date();
   const dd = String(now.getDate()).padStart(2, "0");
@@ -478,7 +490,7 @@ window.addEventListener("load", function () {{
   const min = String(now.getMinutes()).padStart(2, "0");
 
   const timestamp = `${{dd}}/${{mm}}/${{yyyy}}, ${{hh}}:${{min}}`;
-document.querySelector(".replica-meta-bottom").textContent =
+  document.querySelector(".replica-meta-bottom").textContent =
     `${{timestamp}} - > replica`;
 
   setTimeout(function () {{
