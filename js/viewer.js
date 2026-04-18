@@ -79,8 +79,8 @@ function goToCommand(value, config) {
   }
 
   if (v === "about") {
-  window.location.href = "/about.html";
-  return;
+    window.location.href = "/about.html";
+    return;
   }
 
   const commands = {
@@ -185,136 +185,144 @@ function setupViewer(config) {
     });
 
     if (swipeArea) {
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchEndX = 0;
-  let touchEndY = 0;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
 
-  let holdTimer = null;
-  let holdTriggered = false;
-  let pinchDetected = false;
+      let holdTimer = null;
+      let holdTriggered = false;
+      let pinchDetected = false;
 
-  const SWIPE_THRESHOLD = 50;
-  const TAP_MOVE_THRESHOLD = 12;
-  const HOLD_DELAY = 320;
+      const SWIPE_THRESHOLD = 50;
+      const TAP_MOVE_THRESHOLD = 12;
+      const HOLD_DELAY = 380;
 
-  function clearHoldTimer() {
-    if (holdTimer) {
-      clearTimeout(holdTimer);
-      holdTimer = null;
+      function clearHoldTimer() {
+        if (holdTimer) {
+          clearTimeout(holdTimer);
+          holdTimer = null;
+        }
+      }
+
+      function markHoldTriggered() {
+        holdTriggered = true;
+
+        try {
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+        } catch (err) {
+          // ignore
+        }
+      }
+
+      swipeArea.addEventListener(
+        "touchstart",
+        function (event) {
+          holdTriggered = false;
+          pinchDetected = event.touches.length > 1;
+
+          if (pinchDetected) {
+            clearHoldTimer();
+            return;
+          }
+
+          const touch = event.changedTouches[0];
+          touchStartX = touch.screenX;
+          touchStartY = touch.screenY;
+
+          clearHoldTimer();
+          holdTimer = setTimeout(function () {
+            markHoldTriggered();
+          }, HOLD_DELAY);
+        },
+        { passive: true }
+      );
+
+      swipeArea.addEventListener(
+        "touchmove",
+        function (event) {
+          if (event.touches.length > 1) {
+            pinchDetected = true;
+            clearHoldTimer();
+            return;
+          }
+
+          const touch = event.changedTouches[0];
+          const dx = touch.screenX - touchStartX;
+          const dy = touch.screenY - touchStartY;
+
+          if (Math.abs(dx) > TAP_MOVE_THRESHOLD || Math.abs(dy) > TAP_MOVE_THRESHOLD) {
+            clearHoldTimer();
+          }
+        },
+        { passive: true }
+      );
+
+      swipeArea.addEventListener(
+        "touchend",
+        function (event) {
+          clearHoldTimer();
+
+          const touch = event.changedTouches[0];
+          touchEndX = touch.screenX;
+          touchEndY = touch.screenY;
+
+          const dx = touchEndX - touchStartX;
+          const dy = touchEndY - touchStartY;
+
+          const absDx = Math.abs(dx);
+          const absDy = Math.abs(dy);
+
+          if (pinchDetected) {
+            holdTriggered = false;
+            pinchDetected = false;
+            return;
+          }
+
+          if (holdTriggered && absDx <= TAP_MOVE_THRESHOLD && absDy <= TAP_MOVE_THRESHOLD) {
+            holdTriggered = false;
+            goToRandom(archiveSequence);
+            return;
+          }
+
+          holdTriggered = false;
+
+          if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
+            if (dx < 0) {
+              if (nextPage) {
+                window.location.href = nextPage;
+              } else if (latestPage) {
+                window.location.href = latestPage;
+              }
+            }
+
+            if (dx > 0) {
+              if (prevPage) {
+                window.location.href = prevPage;
+              } else if (firstPage) {
+                window.location.href = firstPage;
+              }
+            }
+
+            return;
+          }
+        },
+        { passive: true }
+      );
+
+      swipeArea.addEventListener(
+        "touchcancel",
+        function () {
+          clearHoldTimer();
+          holdTriggered = false;
+          pinchDetected = false;
+        },
+        { passive: true }
+      );
     }
   }
-
-  function triggerRandomWithFeedback() {
-    holdTriggered = true;
-
-    try {
-      if (navigator.vibrate) {
-        navigator.vibrate(10);
-      }
-    } catch (err) {
-      // ignore
-    }
-
-    goToRandom(archiveSequence);
-  }
-
-  swipeArea.addEventListener(
-    "touchstart",
-    function (event) {
-      holdTriggered = false;
-      pinchDetected = event.touches.length > 1;
-
-      if (pinchDetected) {
-        clearHoldTimer();
-        return;
-      }
-
-      const touch = event.changedTouches[0];
-      touchStartX = touch.screenX;
-      touchStartY = touch.screenY;
-
-      clearHoldTimer();
-      holdTimer = setTimeout(function () {
-        triggerRandomWithFeedback();
-      }, HOLD_DELAY);
-    },
-    { passive: true }
-  );
-
-  swipeArea.addEventListener(
-    "touchmove",
-    function (event) {
-      if (event.touches.length > 1) {
-        pinchDetected = true;
-        clearHoldTimer();
-        return;
-      }
-
-      const touch = event.changedTouches[0];
-      const dx = touch.screenX - touchStartX;
-      const dy = touch.screenY - touchStartY;
-
-      if (Math.abs(dx) > TAP_MOVE_THRESHOLD || Math.abs(dy) > TAP_MOVE_THRESHOLD) {
-        clearHoldTimer();
-      }
-    },
-    { passive: true }
-  );
-
-  swipeArea.addEventListener(
-    "touchend",
-    function (event) {
-      clearHoldTimer();
-
-      if (holdTriggered || pinchDetected) {
-        pinchDetected = false;
-        return;
-      }
-
-      const touch = event.changedTouches[0];
-      touchEndX = touch.screenX;
-      touchEndY = touch.screenY;
-
-      const dx = touchEndX - touchStartX;
-      const dy = touchEndY - touchStartY;
-
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
-
-      if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
-        if (dx < 0) {
-          if (nextPage) {
-            window.location.href = nextPage;
-          } else if (latestPage) {
-            window.location.href = latestPage;
-          }
-        }
-
-        if (dx > 0) {
-          if (prevPage) {
-            window.location.href = prevPage;
-          } else if (firstPage) {
-            window.location.href = firstPage;
-          }
-        }
-
-        return;
-      }
-    },
-    { passive: true }
-  );
-
-  swipeArea.addEventListener(
-    "touchcancel",
-    function () {
-      clearHoldTimer();
-      holdTriggered = false;
-      pinchDetected = false;
-    },
-    { passive: true }
-  );
-}
 
   if (useArchiveReport) {
     fetch(archiveReportPath)

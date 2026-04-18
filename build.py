@@ -423,7 +423,7 @@ body {{
   white-space: pre-line;
 }}
 
-.ios-clean .replica-meta-top, {{
+.ios-clean .replica-meta-top {{
   display: none !important;
 }}
 
