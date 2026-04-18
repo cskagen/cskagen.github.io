@@ -196,7 +196,7 @@ function setupViewer(config) {
 
       const SWIPE_THRESHOLD = 50;
       const TAP_MOVE_THRESHOLD = 12;
-      const HOLD_DELAY = 380;
+      const HOLD_DELAY = 280;
 
       function clearHoldTimer() {
         if (holdTimer) {
