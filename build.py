@@ -78,16 +78,14 @@ INDEX_INTRO = """Christian Skagen is a Norwegian visual artist working with draw
 
 This site functions as a public selection of numbered drawings.
 
-Most drawings consist of linear fields drawn with a fountain pen and ruler.
-The number stamp on each drawing contains two pieces of information:
-
-drawing number (xxxx00000000)
-date (0000xxxxxx)
+Drawings consist of linear fields drawn with a fountain pen and ruler.
 
 Navigation:
 
 arrow keys
-swipe gestures (long tap=random)
+swipe gestures
+long tap=random
+
 console commands:
 
 about
@@ -119,12 +117,11 @@ navigation reflects the work:
 one drawing at a time.
 movement is sequential or random.
 
-the site is a production surface.
+the site is an emerging production surface.
 selected drawings can be reproduced as a4 replicas
+each replica is an instance within this system.
 
 (> replica list).
-
-each replica is an instance within this system.
 
 — Christian Skagen"""
 

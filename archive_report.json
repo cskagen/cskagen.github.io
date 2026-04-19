@@ -1,9 +1,9 @@
 {
-  "total_items": 287,
-  "base_drawings": 287,
+  "total_items": 290,
+  "base_drawings": 290,
   "attached_images": 0,
   "first": "tegning_nr499",
-  "latest": "tegning_nr858",
+  "latest": "tegning_nr861",
   "ignored": [
     ".DS_Store"
   ],
@@ -294,6 +294,9 @@
     "tegning_nr855",
     "tegning_nr856",
     "tegning_nr857",
-    "tegning_nr858"
+    "tegning_nr858",
+    "tegning_nr859",
+    "tegning_nr860",
+    "tegning_nr861"
   ]
 }

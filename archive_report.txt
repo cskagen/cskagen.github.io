@@ -1,8 +1,8 @@
-Total items: 287
-Base drawings: 287
+Total items: 290
+Base drawings: 290
 Attached images: 0
 First: tegning_nr499
-Latest: tegning_nr858
+Latest: tegning_nr861
 
 Warnings:
 Ignored file: .DS_Store
@@ -295,3 +295,6 @@ tegning_nr855
 tegning_nr856
 tegning_nr857
 tegning_nr858
+tegning_nr859
+tegning_nr860
+tegning_nr861
