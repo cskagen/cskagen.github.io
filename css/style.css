@@ -41,6 +41,9 @@ h1{
   font-weight:400;
   text-align:left;
   margin:0 0 10px 0;
+
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 h1 a{
