@@ -92,8 +92,6 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  transform-origin:center center;
-  will-change:transform;
 }
 
 .zoom-shell img{
@@ -105,6 +103,9 @@ body{
   user-select:none;
   -webkit-user-drag:none;
   pointer-events:none;
+
+  transform-origin:center center;
+  will-change:transform;
 }
 
 img{

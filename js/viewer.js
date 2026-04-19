@@ -170,7 +170,7 @@ function setupViewer(config) {
     }
 
     function applyTransform() {
-      zoomShell.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     }
 
     function resetZoom() {
