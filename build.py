@@ -87,13 +87,11 @@ date (0000xxxxxx)
 Navigation:
 
 arrow keys
-swipe gestures
+swipe gestures (long tap=random)
 console commands:
 
 about
 random (R)
-latest
-first
 home
 archive
 print
@@ -101,7 +99,7 @@ replica
 replica list
 xxx (enter drawing number)"""
 
-ABOUT_TEXT = """cskagen.no is a sequential archive of ink drawings.
+ABOUT_TEXT = """cskagen.no is a selected record of numbered ink drawings.
 
 each drawing is a personal occurrence:
 a remnant of presence resulting from defined systemic parameters.
@@ -114,12 +112,8 @@ a drawing typically consists of 36 layers.
 each layer is drawn by hand, line by line.
 
 small variations in ink and direction produce gradual shifts.
-these shifts are emergent.
 
 the system is an evolving constant.
-
-the archive is a curated record.
-omission is structural.
 
 navigation reflects the work:
 one drawing at a time.
@@ -127,6 +121,7 @@ movement is sequential or random.
 
 the site is a production surface.
 selected drawings can be reproduced as a4 replicas
+
 (> replica list).
 
 each replica is an instance within this system.
