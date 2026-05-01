@@ -5,7 +5,7 @@
   "first": "tegning_nr499",
   "latest": "tegning_nr863",
   "ignored": [
-    ".DS_Store"
+    "og-default.jpg"
   ],
   "sequence": [
     "tegning_nr499",

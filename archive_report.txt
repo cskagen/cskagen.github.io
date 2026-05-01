@@ -5,7 +5,7 @@ First: tegning_nr499
 Latest: tegning_nr863
 
 Warnings:
-Ignored file: .DS_Store
+Ignored file: og-default.jpg
 
 Sequence:
 tegning_nr499
