@@ -236,17 +236,26 @@ function setupViewer(config) {
     const hasZoom = !!zoomState;
 
     if (commandInput) {
-      commandInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-          goToCommand(this.value, {
-            latestPage,
-            firstPage,
-            homePage,
-            archiveSequence
-          });
-        }
+  commandInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+
+      const value = this.value.trim();
+
+      // Empty return → home
+      if (value === "") {
+        window.location.href = homePage;
+        return;
+      }
+
+      goToCommand(value, {
+        latestPage,
+        firstPage,
+        homePage,
+        archiveSequence
       });
     }
+  });
+}
 
     document.addEventListener("keydown", function (event) {
       const activeElement = document.activeElement;
