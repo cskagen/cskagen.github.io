@@ -90,7 +90,7 @@ console commands:
 
 about
 random (R)
-home
+home (return or enter)
 archive
 print
 replica
