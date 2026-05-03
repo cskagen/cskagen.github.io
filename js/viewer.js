@@ -263,7 +263,13 @@ function setupViewer(config) {
       const typing = activeTag === "input" || activeTag === "textarea";
 
       if (typing) return;
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
+if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+if (event.key === "Enter") {
+  event.preventDefault();
+  window.location.href = homePage;
+  return;
+}
 
       if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F", "Escape"].includes(event.key)) {
         event.preventDefault();
