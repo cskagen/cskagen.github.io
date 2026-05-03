@@ -877,7 +877,7 @@ def write_404_page():
         description="Drawing not found.",
         canonical_url=BASE_URL + "/404.html",
         structured_data=None,
-        css_path="css/style.css",
+        css_path="/css/style.css",
     ).replace(
         '<meta name="robots" content="index,follow,max-image-preview:large">',
         '<meta name="robots" content="noindex,nofollow">'
@@ -918,7 +918,7 @@ or type home</div>
 <input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
 </div>
-<script src="js/viewer.js"></script>
+<script src="/js/viewer.js"></script>
 <script>
 setupViewer({{
   nextPage: null,
@@ -929,6 +929,15 @@ setupViewer({{
   archiveReportPath: "/archive_report.json",
   homePage: "/"
 }})
+
+document.addEventListener("keydown", function(event) {{
+  if (event.key === "Enter" || event.key === "Return") {{
+    const command = document.getElementById("command");
+    if (!command || document.activeElement !== command) {{
+      window.location.href = "/";
+    }}
+  }}
+}});
 </script>
 </body>
 </html>
@@ -1176,8 +1185,8 @@ def build():
     write_sitemap(items)
     write_home_page(items)
     write_about_page()
-    write_404_page()
     write_archive_page(items)
+    write_404_page()
 
     clean_output_dir()
     clean_replica_output_dir()

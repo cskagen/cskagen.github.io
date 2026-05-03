@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="404 – Christian Skagen">
 <meta name="twitter:description" content="Drawing not found.">
 <meta name="twitter:image" content="https://cskagen.no/images/og-default.jpg">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLPHFCN8L0"></script>
 <script>
@@ -61,7 +61,7 @@ or type home</div>
 <input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
 </div>
 </div>
-<script src="js/viewer.js"></script>
+<script src="/js/viewer.js"></script>
 <script>
 setupViewer({
   nextPage: null,
@@ -72,6 +72,15 @@ setupViewer({
   archiveReportPath: "/archive_report.json",
   homePage: "/"
 })
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Enter" || event.key === "Return") {
+    const command = document.getElementById("command");
+    if (!command || document.activeElement !== command) {
+      window.location.href = "/";
+    }
+  }
+});
 </script>
 </body>
 </html>
