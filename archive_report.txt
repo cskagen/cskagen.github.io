@@ -1,13 +1,40 @@
-Total items: 293
-Base drawings: 293
+Total items: 320
+Base drawings: 320
 Attached images: 0
-First: tegning_nr499
+First: tegning_nr470
 Latest: tegning_nr863
 
 Warnings:
 Ignored file: og-default.jpg
 
 Sequence:
+tegning_nr470
+tegning_nr471
+tegning_nr472
+tegning_nr473
+tegning_nr474
+tegning_nr475
+tegning_nr476
+tegning_nr477
+tegning_nr479
+tegning_nr480
+tegning_nr481
+tegning_nr483
+tegning_nr484
+tegning_nr485
+tegning_nr486
+tegning_nr487
+tegning_nr488
+tegning_nr489
+tegning_nr490
+tegning_nr491
+tegning_nr492
+tegning_nr493
+tegning_nr494
+tegning_nr495
+tegning_nr496
+tegning_nr497
+tegning_nr498
 tegning_nr499
 tegning_nr500
 tegning_nr501
