@@ -257,22 +257,33 @@ function setupViewer(config) {
   });
 }
 
-    document.addEventListener("keydown", function (event) {
+    window.addEventListener("keydown", function (event) {
       const activeElement = document.activeElement;
       const activeTag = activeElement ? activeElement.tagName.toLowerCase() : "";
       const typing = activeTag === "input" || activeTag === "textarea";
 
       if (typing) return;
-if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
 
-if (event.key === "Enter") {
-  event.preventDefault();
-  window.location.href = homePage;
-  return;
-}
-
-      if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "r", "R", "f", "F", "Escape"].includes(event.key)) {
+      if ([
+        "Enter",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowUp",
+        "ArrowDown",
+        "r",
+        "R",
+        "f",
+        "F",
+        "Escape"
+      ].includes(event.key)) {
         event.preventDefault();
+      }
+
+      // Return anywhere outside console → home
+      if (event.key === "Enter") {
+        window.location.href = homePage;
+        return;
       }
 
       if (event.key === "Escape" && hasZoom && zoomState.isZoomed()) {
