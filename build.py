@@ -871,6 +871,70 @@ setupViewer({{
 '''
     Path("about.html").write_text(html, encoding="utf-8")
 
+def write_404_page():
+    head = page_head(
+        title="404 – Christian Skagen",
+        description="Drawing not found.",
+        canonical_url=BASE_URL + "/404.html",
+        structured_data=None,
+        css_path="css/style.css",
+    ).replace(
+        '<meta name="robots" content="index,follow,max-image-preview:large">',
+        '<meta name="robots" content="noindex,nofollow">'
+    )
+
+    html = f'''<!doctype html>
+<html>
+<head>
+{head}
+<style>
+.not-found-text{{
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  text-align:left;
+  font-size:16px;
+  line-height:1.5;
+  white-space:pre-line;
+}}
+@media (max-width:600px){{
+  .not-found-text{{font-size:14px;}}
+}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<h1><a href="/">404</a></h1>
+<div class="image-area" id="swipe-area">
+<div class="not-found-text">drawing not found
+
+the drawing may have been removed from the public sequence.
+
+press return
+or type home</div>
+</div>
+<div class="prompt-wrap">
+<span class="prompt">&gt;</span>
+<input id="command" type="text" autocomplete="off" spellcheck="false" aria-label="Command input">
+</div>
+</div>
+<script src="js/viewer.js"></script>
+<script>
+setupViewer({{
+  nextPage: null,
+  prevPage: null,
+  latestPage: null,
+  firstPage: null,
+  useArchiveReport: true,
+  archiveReportPath: "/archive_report.json",
+  homePage: "/"
+}})
+</script>
+</body>
+</html>
+'''
+    Path("404.html").write_text(html, encoding="utf-8")
+
 def write_archive_page(items):
     latest_item = items[-1]
     structured = website_graph([
@@ -1112,6 +1176,7 @@ def build():
     write_sitemap(items)
     write_home_page(items)
     write_about_page()
+    write_404_page()
     write_archive_page(items)
 
     clean_output_dir()
