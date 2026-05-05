@@ -978,7 +978,6 @@ def write_archive_page(items):
         ".archive-grid a:hover{text-decoration:underline;}",
         ".archive-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
         ".archive-item{min-width:0;word-break:break-word;}",
-        ".archive-spacer{min-width:0;}",
         "@media (max-width:600px){.archive-grid{grid-template-columns:repeat(13,1fr);gap:3px 4px;font-size:11px;line-height:1.25;}}",
         "</style>",
         "</head>",
@@ -990,7 +989,6 @@ def write_archive_page(items):
         '<div class="archive-grid">',
     ]
 
-    lines.append('<div class="archive-spacer" aria-hidden="true"></div>')
 
     for item in items:
         label = str(item["base"])
