@@ -973,14 +973,13 @@ def write_archive_page(items):
         "<head>",
         head,
         "<style>",
-        ".archive-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(9,1fr);gap:4px 12px;font-size:13px;line-height:1.35;}",
+        ".archive-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(13,1fr);gap:4px 10px;font-size:13px;line-height:1.35;}",
         ".archive-grid a{color:inherit;text-decoration:none;}",
         ".archive-grid a:hover{text-decoration:underline;}",
         ".archive-meta{width:100%;max-width:1400px;margin:0 auto 10px auto;text-align:left;font-size:14px;line-height:1.5;}",
         ".archive-item{min-width:0;word-break:break-word;}",
-        "@media (max-width:1200px){.archive-grid{grid-template-columns:repeat(6,1fr);}}",
-        "@media (max-width:900px){.archive-grid{grid-template-columns:repeat(3,1fr);}}",
-        "@media (max-width:600px){.archive-grid{grid-template-columns:repeat(2,1fr);font-size:12px;}}",
+        ".archive-spacer{min-width:0;}",
+        "@media (max-width:600px){.archive-grid{grid-template-columns:repeat(13,1fr);gap:3px 4px;font-size:11px;line-height:1.25;}}",
         "</style>",
         "</head>",
         "<body>",
@@ -990,6 +989,8 @@ def write_archive_page(items):
         '<div class="image-area" id="swipe-area">',
         '<div class="archive-grid">',
     ]
+
+    lines.append('<div class="archive-spacer" aria-hidden="true"></div>')
 
     for item in items:
         label = str(item["base"])
