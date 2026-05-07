@@ -74,13 +74,7 @@ GLOBAL_KEYWORDS = [
     "visual art",
 ]
 
-INDEX_INTRO = """Christian Skagen is a Norwegian visual artist working with drawing as constructed, meditative system.
-
-This site functions as a public selection of numbered drawings.
-
-Drawings consist of linear fields drawn with a fountain pen and ruler.
-
-Navigation:
+INDEX_INTRO = """Navigation:
 
 arrow keys
 swipe gestures
