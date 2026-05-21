@@ -393,7 +393,7 @@ body {{
   font-size: 10pt;
   line-height: 1.3;
   font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
-  color: #000;
+  color: #b27373;
   white-space: pre-line;
 }}
 
@@ -405,7 +405,7 @@ body {{
   font-size: 10pt;
   line-height: 1.3;
   font-family: Baskerville, "Baskerville Old Face", Georgia, serif;
-  color: #000;
+  color: #b27373;
   white-space: pre-line;
 }}
 
