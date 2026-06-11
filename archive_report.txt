@@ -1,13 +1,39 @@
-Total items: 314
-Base drawings: 314
+Total items: 342
+Base drawings: 342
 Attached images: 0
-First: tegning_nr470
-Latest: tegning_nr868
+First: tegning_nr001
+Latest: tegning_nr871
 
 Warnings:
 Ignored file: og-default.jpg
 
 Sequence:
+tegning_nr001
+tegning_nr002
+tegning_nr003
+tegning_nr004
+tegning_nr005
+tegning_nr006
+tegning_nr007
+tegning_nr008
+tegning_nr009
+tegning_nr010
+tegning_nr011
+tegning_nr012
+tegning_nr013
+tegning_nr014
+tegning_nr015
+tegning_nr016
+tegning_nr017
+tegning_nr018
+tegning_nr019
+tegning_nr020
+tegning_nr022
+tegning_nr023
+tegning_nr024
+tegning_nr025
+tegning_nr026
+tegning_nr027
 tegning_nr470
 tegning_nr471
 tegning_nr472
@@ -322,3 +348,5 @@ tegning_nr865
 tegning_nr866
 tegning_nr867
 tegning_nr868
+tegning_nr869
+tegning_nr871

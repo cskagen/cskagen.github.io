@@ -252,17 +252,14 @@ def parse_images():
             ignored.append(name)
             continue
 
-        base = int(m_main.group(1))
+        num_raw = m_main.group(1)
+        base = int(num_raw)
 
-        if base in seen_bases:
-            raise SystemExit(f"ERROR: Duplicate base drawing for {name}")
-        seen_bases.add(base)
-
-        slug = f"tegning_nr{base}"
+        slug = f"tegning_nr{num_raw}"
         visible_title = slug
-        display_name = f"tegning nr {base}"
-        page_title = f"tegning nr {base} – Christian Skagen"
-        alt = f"Ink drawing nr {base} by Christian Skagen"
+        display_name = f"tegning nr {num_raw}"
+        page_title = f"tegning nr {num_raw} – Christian Skagen"
+        alt = f"Ink drawing nr {num_raw} by Christian Skagen"
 
         image_url = f"{IMAGE_BASE_URL}/{name}"
         canonical_url = f"{BASE_URL}/drawings/{slug}.html"
