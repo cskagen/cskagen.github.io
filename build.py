@@ -485,7 +485,6 @@ window.addEventListener("load", function () {{
 </html>
 '''
 
-
 def write_replica_list_page(items):
     lines = [
         "<!doctype html>",
@@ -509,7 +508,7 @@ def write_replica_list_page(items):
         "<body>",
         '<div class="wrapper">',
         '<h1><a href="/">replica</a></h1>',
-        '<div class="replica-meta">Available A4 replica print pages. Commands: replica, replica 851, replica 858.</div>',
+        '<div class="replica-meta">Available A4 replica print pages.</div>',
         '<div class="image-area" id="swipe-area">',
         '<div class="replica-grid">',
     ]
