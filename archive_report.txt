@@ -1,5 +1,5 @@
-Total items: 379
-Base drawings: 379
+Total items: 412
+Base drawings: 412
 Attached images: 0
 First: tegning_nr001
 Latest: tegning_nr873
@@ -69,6 +69,39 @@ tegning_nr061
 tegning_nr062
 tegning_nr063
 tegning_nr064
+tegning_nr066
+tegning_nr067
+tegning_nr068
+tegning_nr069
+tegning_nr070
+tegning_nr071
+tegning_nr072
+tegning_nr073
+tegning_nr074
+tegning_nr075
+tegning_nr076
+tegning_nr077
+tegning_nr078
+tegning_nr079
+tegning_nr080
+tegning_nr081
+tegning_nr082
+tegning_nr083
+tegning_nr084
+tegning_nr086
+tegning_nr088
+tegning_nr089
+tegning_nr090
+tegning_nr091
+tegning_nr092
+tegning_nr093
+tegning_nr094
+tegning_nr095
+tegning_nr096
+tegning_nr097
+tegning_nr098
+tegning_nr099
+tegning_nr100
 tegning_nr470
 tegning_nr471
 tegning_nr472
