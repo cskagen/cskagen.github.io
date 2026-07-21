@@ -46,6 +46,7 @@ GA_MEASUREMENT_ID = "G-GLPHFCN8L0"
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
+HOME_BACKGROUND = "backgrounds/bg_01.jpg"
 HOME_DESCRIPTION = (
     "Christian Skagen is a Norwegian visual artist working with systematic, meditative ink drawing. "
     "The drawings are constructed as linear fields through layered parallel line systems, "
@@ -741,6 +742,14 @@ def write_home_page(items):
 <meta name="google-site-verification" content="tyE3vdezEKc1F00i3hvjLin892w6CZbKQboJcbj_Azk">
 {head}
 <style>
+body{{
+  background-color:#ffffff;
+  background-image:url("{HOME_BACKGROUND}");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}}
 .index-text{{
   width:100%;
   max-width:720px;
