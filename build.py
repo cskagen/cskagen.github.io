@@ -46,7 +46,7 @@ GA_MEASUREMENT_ID = "G-GLPHFCN8L0"
 MAIN_RE = re.compile(r"^tegning_nr(\d+)\.jpg$")
 
 HOME_TITLE = "Christian Skagen – drawings"
-HOME_BACKGROUND = "backgrounds/bg_01.jpg"
+HOME_BACKGROUND = "backgrounds/bg_02.jpg"
 HOME_DESCRIPTION = (
     "Christian Skagen is a Norwegian visual artist working with systematic, meditative ink drawing. "
     "The drawings are constructed as linear fields through layered parallel line systems, "
