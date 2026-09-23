@@ -1,8 +1,8 @@
-Total items: 419
-Base drawings: 419
+Total items: 420
+Base drawings: 420
 Attached images: 0
 First: tegning_nr001
-Latest: tegning_nr880
+Latest: tegning_nr881
 
 Warnings:
 Ignored file: og-default.jpg
@@ -427,3 +427,4 @@ tegning_nr877
 tegning_nr878
 tegning_nr879
 tegning_nr880
+tegning_nr881

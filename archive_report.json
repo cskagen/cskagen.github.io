@@ -1,9 +1,9 @@
 {
-  "total_items": 419,
-  "base_drawings": 419,
+  "total_items": 420,
+  "base_drawings": 420,
   "attached_images": 0,
   "first": "tegning_nr001",
-  "latest": "tegning_nr880",
+  "latest": "tegning_nr881",
   "ignored": [
     "og-default.jpg"
   ],
@@ -426,6 +426,7 @@
     "tegning_nr877",
     "tegning_nr878",
     "tegning_nr879",
-    "tegning_nr880"
+    "tegning_nr880",
+    "tegning_nr881"
   ]
 }
