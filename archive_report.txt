@@ -1,5 +1,5 @@
-Total items: 425
-Base drawings: 425
+Total items: 428
+Base drawings: 428
 Attached images: 0
 First: tegning_nr001
 Latest: tegning_nr883
@@ -102,6 +102,9 @@ tegning_nr097
 tegning_nr098
 tegning_nr099
 tegning_nr100
+tegning_nr430
+tegning_nr431
+tegning_nr432
 tegning_nr437
 tegning_nr439
 tegning_nr440
